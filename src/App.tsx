@@ -18,11 +18,12 @@ import Settings from '@/pages/Settings';
 import RequestAssistance from '@/pages/RequestAssistance';
 import MyRequests from '@/pages/MyRequests';
 import AdminRequests from '@/pages/AdminRequests';
-import LoadingSpinner from '@/components/UI/LoadingSpinner';
+import Profile from '@/pages/Profile';
+import Help from '@/pages/Help';
 
 // Protected Route Component
 const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const { isAuthenticated, user } = useAuth();
+  const { isAuthenticated } = useAuth();
 
   if (!isAuthenticated) {
     return <Navigate to="/login" replace />;
@@ -122,6 +123,16 @@ const AppRoutes: React.FC = () => {
             <RoleProtectedRoute allowedRoles={['admin', 'branch_manager']}>
               <Settings />
             </RoleProtectedRoute>
+          } />
+          <Route path="profile" element={
+            <ProtectedRoute>
+              <Profile />
+            </ProtectedRoute>
+          } />
+          <Route path="help" element={
+            <ProtectedRoute>
+              <Help />
+            </ProtectedRoute>
           } />
         </Route>
         <Route path="login" element={<Navigate to="/dashboard" replace />} />

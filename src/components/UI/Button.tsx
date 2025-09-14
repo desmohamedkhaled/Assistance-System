@@ -1,181 +1,29 @@
 import React from 'react';
-import styled, { css } from 'styled-components';
+import { motion } from 'framer-motion';
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: 'primary' | 'secondary' | 'success' | 'danger' | 'warning' | 'info';
+  variant?: 'primary' | 'secondary' | 'success' | 'danger' | 'warning' | 'info' | 'outline';
   size?: 'sm' | 'md' | 'lg';
   fullWidth?: boolean;
   loading?: boolean;
   children: React.ReactNode;
 }
 
-const ButtonBase = styled.button<ButtonProps>`
-  padding: 12px 20px;
-  border: none;
-  border-radius: var(--radius-md);
-  cursor: pointer;
-  font-size: 14px;
-  font-weight: 600;
-  text-decoration: none;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  transition: all var(--transition-normal);
-  position: relative;
-  overflow: hidden;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  margin: 2px;
-  text-align: center;
-  min-height: 44px;
-  backdrop-filter: blur(10px);
-  box-shadow: var(--shadow-sm);
-
-  ${props => props.fullWidth && css`
-    width: 100%;
-  `}
-
-  ${props => props.size === 'sm' && css`
-    padding: 6px 12px;
-    font-size: 12px;
-    min-height: 32px;
-  `}
-
-  ${props => props.size === 'lg' && css`
-    padding: 16px 24px;
-    font-size: 16px;
-    min-height: 52px;
-  `}
-
-  ${props => props.loading && css`
-    pointer-events: none;
-    opacity: 0.7;
-  `}
-
-  &:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-  }
-
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-    transition: left 0.5s;
-  }
-
-  &:hover:not(:disabled)::before {
-    left: 100%;
-  }
-`;
-
-const PrimaryButton = styled(ButtonBase)`
-  background: var(--primary-gradient);
-  color: var(--white);
-  box-shadow: var(--shadow-primary);
-  border: 1px solid rgba(102, 126, 234, 0.2);
-
-  &:hover:not(:disabled) {
-    transform: translateY(-3px) scale(1.05);
-    box-shadow: var(--shadow-primary-lg);
-    border-color: rgba(102, 126, 234, 0.3);
-    animation: pulse 0.6s ease-in-out;
-  }
-
-  &:active:not(:disabled) {
-    transform: translateY(-1px) scale(1.02);
-    box-shadow: var(--shadow-primary);
-  }
-
-  &::before {
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-  }
-`;
-
-const SecondaryButton = styled(ButtonBase)`
-  background: var(--secondary-color);
-  color: var(--white);
-  border: 1px solid rgba(108, 117, 125, 0.2);
-
-  &:hover:not(:disabled) {
-    background: var(--secondary-dark);
-    transform: translateY(-2px) scale(1.02);
-    box-shadow: var(--shadow-md);
-    border-color: rgba(108, 117, 125, 0.3);
-  }
-`;
-
-const SuccessButton = styled(ButtonBase)`
-  background: var(--success-color);
-  color: var(--white);
-  border: 1px solid rgba(40, 167, 69, 0.2);
-
-  &:hover:not(:disabled) {
-    background: var(--success-dark);
-    transform: translateY(-2px) scale(1.02);
-    box-shadow: 0 8px 25px rgba(40, 167, 69, 0.3);
-    border-color: rgba(40, 167, 69, 0.3);
-  }
-`;
-
-const DangerButton = styled(ButtonBase)`
-  background: var(--danger-color);
-  color: var(--white);
-  border: 1px solid rgba(220, 53, 69, 0.2);
-
-  &:hover:not(:disabled) {
-    background: var(--danger-dark);
-    transform: translateY(-2px) scale(1.02);
-    box-shadow: 0 8px 25px rgba(220, 53, 69, 0.3);
-    border-color: rgba(220, 53, 69, 0.3);
-  }
-`;
-
-const WarningButton = styled(ButtonBase)`
-  background: var(--warning-color);
-  color: var(--gray-800);
-  border: 1px solid rgba(255, 193, 7, 0.2);
-
-  &:hover:not(:disabled) {
-    background: var(--warning-dark);
-    transform: translateY(-2px) scale(1.02);
-    box-shadow: 0 8px 25px rgba(255, 193, 7, 0.3);
-    border-color: rgba(255, 193, 7, 0.3);
-  }
-`;
-
-const InfoButton = styled(ButtonBase)`
-  background: var(--info-color);
-  color: var(--white);
-  border: 1px solid rgba(23, 162, 184, 0.2);
-
-  &:hover:not(:disabled) {
-    background: var(--info-dark);
-    transform: translateY(-2px) scale(1.02);
-    box-shadow: 0 8px 25px rgba(23, 162, 184, 0.3);
-    border-color: rgba(23, 162, 184, 0.3);
-  }
-`;
-
-const LoadingSpinner = styled.div`
-  width: 16px;
-  height: 16px;
-  border: 2px solid transparent;
-  border-top: 2px solid currentColor;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-
-  @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-  }
-`;
-
+/**
+ * Enhanced Button Component
+ * 
+ * A versatile button component with multiple variants and sizes.
+ * Features smooth animations, loading states, and accessibility support.
+ * 
+ * Features:
+ * - Multiple color variants (primary, secondary, success, danger, warning, info, outline)
+ * - Three sizes (sm, md, lg)
+ * - Loading state with spinner
+ * - Full width option
+ * - Smooth hover animations
+ * - Accessibility support
+ * - RTL support for Arabic content
+ */
 const Button: React.FC<ButtonProps> = ({ 
   variant = 'primary', 
   size = 'md', 
@@ -183,29 +31,101 @@ const Button: React.FC<ButtonProps> = ({
   loading = false, 
   children, 
   disabled,
+  className = '',
   ...props 
 }) => {
-  const ButtonComponent = {
-    primary: PrimaryButton,
-    secondary: SecondaryButton,
-    success: SuccessButton,
-    danger: DangerButton,
-    warning: WarningButton,
-    info: InfoButton
-  }[variant];
+  // Base button classes
+  const baseClasses = `
+    inline-flex items-center justify-center font-medium text-sm transition-all duration-300 
+    focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed
+    relative overflow-hidden     ${fullWidth ? 'w-full' : ''}
+    ${loading ? 'pointer-events-none opacity-70' : ''}
+    group
+  `;
+
+  // Size classes
+  const sizeClasses = {
+    sm: 'px-4 py-2 text-sm min-h-[40px] rounded-lg',
+    md: 'px-6 py-3 text-sm min-h-[48px] rounded-xl',
+    lg: 'px-8 py-4 text-base min-h-[56px] rounded-xl'
+  };
+
+  // Variant classes
+  const variantClasses = {
+    primary: `
+      bg-gradient-to-r from-primary-500 to-primary-600 text-white 
+      hover:from-primary-600 hover:to-primary-700 focus:ring-primary-500 
+      shadow-lg hover:shadow-xl transform hover:-translate-y-1 hover:scale-105
+      border border-primary-200
+    `,
+    secondary: `
+      bg-gradient-to-r from-secondary-500 to-secondary-600 text-white 
+      hover:from-secondary-600 hover:to-secondary-700 focus:ring-secondary-500 
+      shadow-lg hover:shadow-xl transform hover:-translate-y-1 hover:scale-105
+      border border-secondary-200
+    `,
+    success: `
+      bg-gradient-to-r from-success-500 to-success-600 text-white 
+      hover:from-success-600 hover:to-success-700 focus:ring-success-500 
+      shadow-lg hover:shadow-xl transform hover:-translate-y-1 hover:scale-105
+      border border-success-200
+    `,
+    danger: `
+      bg-gradient-to-r from-danger-500 to-danger-600 text-white 
+      hover:from-danger-600 hover:to-danger-700 focus:ring-danger-500 
+      shadow-lg hover:shadow-xl transform hover:-translate-y-1 hover:scale-105
+      border border-danger-200
+    `,
+    warning: `
+      bg-gradient-to-r from-warning-500 to-warning-600 text-gray-800 
+      hover:from-warning-600 hover:to-warning-700 focus:ring-warning-500 
+      shadow-lg hover:shadow-xl transform hover:-translate-y-1 hover:scale-105
+      border border-warning-200
+    `,
+    info: `
+      bg-gradient-to-r from-info-500 to-info-600 text-white 
+      hover:from-info-600 hover:to-info-700 focus:ring-info-500 
+      shadow-lg hover:shadow-xl transform hover:-translate-y-1 hover:scale-105
+      border border-info-200
+    `,
+    outline: `
+      border-2 border-primary-500 bg-transparent text-primary-600 
+      hover:bg-primary-500 hover:text-white focus:ring-primary-500
+      shadow-lg hover:shadow-xl transform hover:-translate-y-1 hover:scale-105
+    `
+  };
+
+  // Loading spinner component
+  const LoadingSpinner = () => (
+    <div className="w-4 h-4 border-2 border-transparent border-t-current rounded-full animate-spin mr-2" />
+  );
+
+  // Combine all classes
+  const buttonClasses = `
+    ${baseClasses}
+    ${sizeClasses[size]}
+    ${variantClasses[variant]}
+    ${className}
+  `.trim().replace(/\s+/g, ' ');
 
   return (
-    <ButtonComponent
-      variant={variant}
-      size={size}
-      fullWidth={fullWidth}
-      loading={loading}
+    <motion.button
+      className={buttonClasses}
       disabled={disabled || loading}
-      {...props}
+      whileHover={{ scale: 1.02, y: -2 }}
+      whileTap={{ scale: 0.98 }}
+      transition={{ type: "spring", stiffness: 400, damping: 17 }}
+      {...(props as any)}
     >
-      {loading && <LoadingSpinner />}
-      {children}
-    </ButtonComponent>
+      {/* Shimmer effect overlay */}
+      <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 bg-gradient-to-r from-transparent via-white/20 to-transparent" />
+      
+      {/* Button content */}
+      <span className="relative flex items-center justify-center gap-2">
+        {loading && <LoadingSpinner />}
+        {children}
+      </span>
+    </motion.button>
   );
 };
 

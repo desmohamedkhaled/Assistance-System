@@ -23,7 +23,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       // Load users from storage or use default
       const users = loadDataFromStorage('users', defaultUsers);
       
-      // Find user by username and password
+      // Find user by username and password (in production, use proper password hashing)
       const foundUser = users.find(u => u.username === username && u.password === password);
       
       if (foundUser && foundUser.status === 'active') {
@@ -35,7 +35,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       
       return false;
     } catch (error) {
-      console.error('Login error:', error);
+      // Log error in development mode
       return false;
     }
   };

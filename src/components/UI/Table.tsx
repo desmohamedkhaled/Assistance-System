@@ -1,4 +1,3 @@
-import styled from 'styled-components';
 import { TableColumn } from '@/types';
 
 interface TableProps<T> {
@@ -9,226 +8,95 @@ interface TableProps<T> {
   onRowClick?: (item: T) => void;
   className?: string;
 }
-
-const TableContainer = styled.div`
-  overflow-x: auto;
-  background: var(--bg-primary);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-md);
-  border: 1px solid rgba(102, 126, 234, 0.1);
-  backdrop-filter: blur(10px);
-  animation: slideInUp 0.6s ease-out;
-  position: relative;
-  overflow: hidden;
-
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 3px;
-    background: var(--primary-gradient);
-    transform: scaleX(0);
-    transform-origin: left;
-    transition: transform var(--transition-normal);
-  }
-
-  &:hover::before {
-    transform: scaleX(1);
-  }
-`;
-
-const Table = styled.table`
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 14px;
-`;
-
-const TableHeader = styled.thead`
-  background: var(--light-gray);
-  position: sticky;
-  top: 0;
-  z-index: 10;
-`;
-
-const TableHeaderCell = styled.th`
-  padding: var(--space-md) var(--space-sm);
-  text-align: right;
-  font-weight: 600;
-  color: var(--text-primary);
-  border-bottom: 2px solid var(--gray-200);
-  white-space: nowrap;
-  background: var(--light-gray);
-  position: relative;
-  transition: all var(--transition-normal);
-
-  &:hover {
-    background: var(--gray-100);
-    color: var(--primary-color);
-  }
-
-  &::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 2px;
-    background: var(--primary-gradient);
-    transform: scaleX(0);
-    transform-origin: left;
-    transition: transform var(--transition-normal);
-  }
-
-  &:hover::after {
-    transform: scaleX(1);
-  }
-`;
-
-const TableBody = styled.tbody``;
-
-const TableRow = styled.tr<{ $clickable?: boolean }>`
-  cursor: ${props => props.$clickable ? 'pointer' : 'default'};
-  transition: all var(--transition-normal);
-  position: relative;
-  animation: slideInRight 0.3s ease-out;
-
-  &:hover {
-    background-color: var(--light-gray);
-    transform: translateX(-2px);
-    box-shadow: var(--shadow-sm);
-  }
-
-  &:nth-child(even) {
-    background-color: rgba(102, 126, 234, 0.02);
-  }
-
-  &:nth-child(even):hover {
-    background-color: var(--light-gray);
-  }
-`;
-
-const TableCell = styled.td`
-  padding: var(--space-md);
-  border-bottom: 1px solid var(--gray-200);
-  text-align: right;
-  transition: all var(--transition-normal);
-  position: relative;
-
-  &:hover {
-    color: var(--primary-color);
-  }
-`;
-
-const LoadingContainer = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: var(--space-2xl);
-  color: var(--primary-color);
-  animation: fadeIn 0.6s ease-out;
-`;
-
-const LoadingSpinner = styled.div`
-  width: 40px;
-  height: 40px;
-  border: 4px solid var(--gray-200);
-  border-top: 4px solid var(--primary-color);
-  border-radius: var(--radius-full);
-  animation: spin 1s linear infinite;
-  margin-left: var(--space-sm);
-
-  @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-  }
-`;
-
-const EmptyState = styled.div`
-  text-align: center;
-  padding: var(--space-2xl) var(--space-lg);
-  color: var(--text-secondary);
-  animation: fadeIn 0.6s ease-out;
-`;
-
-const EmptyStateIcon = styled.div`
-  font-size: 48px;
-  color: var(--gray-300);
-  margin-bottom: var(--space-md);
-  animation: float 3s ease-in-out infinite;
-`;
-
-const EmptyStateText = styled.p`
-  font-size: 16px;
-  margin: 0;
-  color: var(--text-secondary);
-`;
-
 function DataTable<T extends Record<string, any>>({
   data,
   columns,
   loading = false,
   emptyMessage = 'لا توجد بيانات',
   onRowClick,
-  className
+  className = ''
 }: TableProps<T>) {
+  // Loading state
   if (loading) {
     return (
-      <TableContainer className={className}>
-        <LoadingContainer>
-          <LoadingSpinner />
-          جاري التحميل...
-        </LoadingContainer>
-      </TableContainer>
+      <div className={`bg-white rounded-2xl shadow-lg border border-gray-200/50  overflow-hidden animate-fade-in ${className}`}>
+        <div className="flex items-center justify-center py-20 text-primary-600">
+          <div className="w-12 h-12 border-4 border-gray-200 border-t-primary-500 rounded-full animate-spin ml-4" />
+          <span className="text-xl font-semibold">جاري التحميل...</span>
+        </div>
+      </div>
     );
   }
 
+  // Empty state
   if (data.length === 0) {
     return (
-      <TableContainer className={className}>
-        <EmptyState>
-          <EmptyStateIcon>
-            <i className="fas fa-inbox"></i>
-          </EmptyStateIcon>
-          <EmptyStateText>{emptyMessage}</EmptyStateText>
-        </EmptyState>
-      </TableContainer>
+      <div className={`bg-white rounded-2xl shadow-lg border border-gray-200/50  overflow-hidden animate-fade-in ${className}`}>
+        <div className="text-center py-20">
+          <div className="text-7xl text-gray-300 mb-6 animate-float">
+            <i className="fas fa-inbox" />
+          </div>
+          <p className="text-xl text-gray-500 font-semibold">{emptyMessage}</p>
+        </div>
+      </div>
     );
   }
 
   return (
-    <TableContainer className={className}>
-      <Table>
-        <TableHeader>
-          <tr>
-            {columns.map((column, index) => (
-              <TableHeaderCell key={index}>
-                {column.label}
-              </TableHeaderCell>
-            ))}
-          </tr>
-        </TableHeader>
-        <TableBody>
-          {data.map((item, rowIndex) => (
-            <TableRow
-              key={rowIndex}
-              $clickable={!!onRowClick}
-              onClick={() => onRowClick?.(item)}
-            >
-              {columns.map((column, colIndex) => (
-                <TableCell key={colIndex}>
-                  {column.render
-                    ? column.render(item[column.key], item)
-                    : item[column.key]
-                  }
-                </TableCell>
+    <div className={`bg-white rounded-2xl shadow-lg border border-gray-200/50  overflow-hidden animate-fade-in relative ${className}`}>
+      {/* Top accent border */}
+      <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-primary-500 to-primary-600" />
+      
+      {/* Table */}
+      <div className="overflow-x-auto">
+        <table className="w-full border-collapse">
+          {/* Header */}
+          <thead className="bg-gradient-to-r from-gray-50 to-gray-100 sticky top-0 z-10">
+            <tr>
+              {columns.map((column, index) => (
+                <th
+                  key={index}
+                  className="px-6 py-5 text-right font-semibold text-gray-700 border-b-2 border-gray-200 whitespace-nowrap transition-all duration-200 hover:bg-gray-100 hover:text-primary-600 relative group"
+                >
+                  {column.label}
+                  {/* Hover underline effect */}
+                  <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-primary-500 to-primary-600 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-200" />
+                </th>
               ))}
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
+            </tr>
+          </thead>
+          
+          {/* Body */}
+          <tbody>
+            {data.map((item, rowIndex) => (
+              <tr
+                key={rowIndex}
+                className={`
+                  transition-all duration-200 relative animate-slide-in-right
+                  ${onRowClick ? 'cursor-pointer hover:bg-gray-50 hover:shadow-sm hover:-translate-x-1' : ''}
+                  ${rowIndex % 2 === 0 ? 'bg-white' : 'bg-gray-50/30'}
+                  hover:bg-gray-50
+                `}
+                onClick={() => onRowClick?.(item)}
+                style={{ animationDelay: `${rowIndex * 50}ms` }}
+              >
+                {columns.map((column, colIndex) => (
+                  <td
+                    key={colIndex}
+                    className="px-6 py-5 text-right border-b border-gray-200 transition-colors duration-200 hover:text-primary-600"
+                  >
+                    {column.render
+                      ? column.render(item[column.key], item)
+                      : item[column.key]
+                    }
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
   );
 }
 

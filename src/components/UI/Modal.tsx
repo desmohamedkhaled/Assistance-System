@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { createPortal } from 'react-dom';
-import styled from 'styled-components';
+import { motion, AnimatePresence } from 'framer-motion';
 
 interface ModalProps {
   isOpen: boolean;
@@ -9,134 +9,34 @@ interface ModalProps {
   children: React.ReactNode;
   size?: 'sm' | 'md' | 'lg' | 'xl';
   showCloseButton?: boolean;
+  className?: string;
 }
 
-const ModalOverlay = styled.div<{ $isOpen: boolean }>`
-  display: ${props => props.$isOpen ? 'flex' : 'none'};
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.6);
-  backdrop-filter: blur(8px);
-  z-index: var(--z-modal);
-  align-items: center;
-  justify-content: center;
-  animation: ${props => props.$isOpen ? 'fadeIn 0.3s ease' : 'fadeOut 0.3s ease'};
-  padding: var(--space-lg);
-
-  @keyframes fadeIn {
-    from { 
-      opacity: 0;
-      backdrop-filter: blur(0px);
-    }
-    to { 
-      opacity: 1;
-      backdrop-filter: blur(8px);
-    }
-  }
-
-  @keyframes fadeOut {
-    from { 
-      opacity: 1;
-      backdrop-filter: blur(8px);
-    }
-    to { 
-      opacity: 0;
-      backdrop-filter: blur(0px);
-    }
-  }
-`;
-
-const ModalContent = styled.div<{ $size: string }>`
-  background: var(--bg-primary);
-  border-radius: var(--radius-xl);
-  width: 90%;
-  max-width: ${props => {
-    switch (props.$size) {
-      case 'sm': return '400px';
-      case 'md': return '600px';
-      case 'lg': return '800px';
-      case 'xl': return '1200px';
-      default: return '600px';
-    }
-  }};
-  max-height: 90vh;
-  overflow-y: auto;
-  box-shadow: var(--shadow-xl);
-  animation: zoomIn 0.3s ease;
-  border: 1px solid rgba(102, 126, 234, 0.1);
-  backdrop-filter: blur(20px);
-  position: relative;
-
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 4px;
-    background: var(--primary-gradient);
-    border-radius: var(--radius-xl) var(--radius-xl) 0 0;
-  }
-`;
-
-const ModalHeader = styled.div`
-  padding: var(--space-lg) var(--space-xl);
-  border-bottom: 1px solid var(--gray-200);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background: rgba(102, 126, 234, 0.02);
-  border-radius: var(--radius-xl) var(--radius-xl) 0 0;
-`;
-
-const ModalTitle = styled.h3`
-  font-size: 20px;
-  color: var(--text-primary);
-  font-weight: 600;
-  margin: 0;
-  background: var(--primary-gradient);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-`;
-
-const CloseButton = styled.button`
-  background: none;
-  border: none;
-  font-size: 24px;
-  color: var(--text-secondary);
-  cursor: pointer;
-  padding: var(--space-xs);
-  border-radius: var(--radius-sm);
-  transition: all var(--transition-normal);
-
-  &:hover {
-    background-color: var(--light-gray);
-    color: var(--danger-color);
-    transform: scale(1.1) rotate(90deg);
-  }
-
-  &:active {
-    transform: scale(0.95) rotate(90deg);
-  }
-`;
-
-const ModalBody = styled.div`
-  padding: var(--space-xl);
-  animation: slideInUp 0.3s ease-out;
-`;
-
+/**
+ * Enhanced Modal Component
+ * 
+ * A versatile modal component with multiple sizes and smooth animations.
+ * Features keyboard navigation and accessibility support.
+ * 
+ * Features:
+ * - Multiple sizes (sm, md, lg, xl)
+ * - Smooth fade and zoom animations
+ * - Keyboard navigation (ESC to close)
+ * - Click outside to close
+ * - Body scroll lock when open
+ * - Accessibility support
+ * - RTL support for Arabic content
+ */
 const Modal: React.FC<ModalProps> = ({
   isOpen,
   onClose,
   title,
   children,
   size = 'md',
-  showCloseButton = true
+  showCloseButton = true,
+  className = ''
 }) => {
+  // Handle keyboard navigation
   useEffect(() => {
     const handleEscape = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
@@ -155,26 +55,89 @@ const Modal: React.FC<ModalProps> = ({
     };
   }, [isOpen, onClose]);
 
-  if (!isOpen) return null;
+  // Size classes
+  const sizeClasses = {
+    sm: 'max-w-lg',
+    md: 'max-w-3xl',
+    lg: 'max-w-5xl',
+    xl: 'max-w-7xl'
+  };
 
   return createPortal(
-    <ModalOverlay $isOpen={isOpen} onClick={onClose}>
-      <ModalContent $size={size} onClick={(e) => e.stopPropagation()}>
+    <AnimatePresence>
+      {isOpen && (
+        <motion.div 
+          className={`fixed inset-0 z-50 flex items-center justify-center p-4 ${className}`}
+          onClick={onClose}
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby={title ? 'modal-title' : undefined}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.2 }}
+        >
+          {/* Backdrop */}
+          <motion.div 
+            className="absolute inset-0 bg-black/60 "
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          />
+          
+          {/* Modal Content */}
+          <motion.div 
+            className={`
+              relative bg-white rounded-3xl shadow-2xl w-full max-h-[90vh] overflow-y-auto
+              border border-gray-200/50               ${sizeClasses[size]}
+            `}
+            onClick={(e) => e.stopPropagation()}
+            initial={{ opacity: 0, scale: 0.8, y: 50 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.8, y: 50 }}
+            transition={{ type: "spring", stiffness: 300, damping: 30 }}
+          >
+        {/* Top accent border */}
+        <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-primary-500 to-primary-600 rounded-t-3xl" />
+        
+        {/* Header */}
         {(title || showCloseButton) && (
-          <ModalHeader>
-            {title && <ModalTitle>{title}</ModalTitle>}
-            {showCloseButton && (
-              <CloseButton onClick={onClose}>
-                <i className="fas fa-times"></i>
-              </CloseButton>
-            )}
-          </ModalHeader>
+          <div className="px-8 py-6 border-b border-gray-200 bg-gradient-to-r from-primary-50/50 to-primary-100/30 rounded-t-3xl">
+            <div className="flex justify-between items-center">
+              {title && (
+                <h3 
+                  id="modal-title"
+                  className="text-2xl font-bold text-gray-900 bg-gradient-to-r from-primary-600 to-primary-800 bg-clip-text text-transparent"
+                >
+                  {title}
+                </h3>
+              )}
+              {showCloseButton && (
+                <button
+                  onClick={onClose}
+                  className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-all duration-200 hover:scale-110 hover:rotate-90"
+                  aria-label="إغلاق النافذة"
+                >
+                  <i className="fas fa-times text-lg" />
+                </button>
+              )}
+            </div>
+          </div>
         )}
-        <ModalBody>
-          {children}
-        </ModalBody>
-      </ModalContent>
-    </ModalOverlay>,
+        
+            {/* Body */}
+            <motion.div 
+              className="px-8 py-8"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.1, duration: 0.3 }}
+            >
+              {children}
+            </motion.div>
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>,
     document.body
   );
 };

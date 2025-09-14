@@ -7,7 +7,6 @@ import { exportBeneficiariesToExcel, exportBeneficiariesToPDF } from '@/utils/ex
 import DataTable from '@/components/UI/Table';
 import Button from '@/components/UI/Button';
 import Modal from '@/components/UI/Modal';
-import StatusBadge from '@/components/UI/StatusBadge';
 import ExportButton from '@/components/UI/ExportButton';
 import toast from 'react-hot-toast';
 
@@ -16,35 +15,61 @@ const PageContainer = styled.div`
 `;
 
 const PageHeader = styled.div`
-  margin-bottom: 24px;
-  padding-bottom: 16px;
-  border-bottom: 1px solid #e9ecef;
+  margin-bottom: 32px;
+  padding: 24px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 20px;
+  color: white;
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="rgba(255,255,255,0.1)"/><circle cx="75" cy="75" r="1" fill="rgba(255,255,255,0.1)"/><circle cx="50" cy="10" r="0.5" fill="rgba(255,255,255,0.05)"/><circle cx="10" cy="60" r="0.5" fill="rgba(255,255,255,0.05)"/><circle cx="90" cy="40" r="0.5" fill="rgba(255,255,255,0.05)"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+    opacity: 0.3;
+    animation: float 20s ease-in-out infinite;
+  }
 `;
 
 const PageTitle = styled.h1`
-  font-size: 32px;
-  color: #333;
+  font-size: 36px;
+  color: white;
   margin-bottom: 8px;
   line-height: 1.3;
-  font-weight: 600;
+  font-weight: 700;
   text-align: right;
+  position: relative;
+  z-index: 1;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 `;
 
 const PageSubtitle = styled.p`
-  color: #666;
-  font-size: 16px;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 18px;
   line-height: 1.6;
   margin: 0;
   text-align: right;
+  position: relative;
+  z-index: 1;
 `;
 
 const PageActions = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 25px;
+  margin-bottom: 32px;
   flex-wrap: wrap;
-  gap: 15px;
+  gap: 20px;
+  padding: 24px;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(102, 126, 234, 0.1);
 `;
 
 const SearchContainer = styled.div`
@@ -55,40 +80,55 @@ const SearchContainer = styled.div`
 
 const SearchInput = styled.input`
   width: 100%;
-  padding: 12px 45px 12px 15px;
+  padding: 14px 50px 14px 16px;
   border: 2px solid #e9ecef;
-  border-radius: 8px;
-  font-size: 14px;
-  transition: border-color 0.3s ease;
+  border-radius: 12px;
+  font-size: 15px;
+  transition: all 0.3s ease;
   direction: rtl;
+  background: #f8f9fa;
 
   &:focus {
     outline: none;
     border-color: #667eea;
-    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+    background: white;
+    transform: translateY(-1px);
   }
 `;
 
 const SearchIcon = styled.i`
   position: absolute;
-  right: 15px;
+  right: 16px;
   top: 50%;
   transform: translateY(-50%);
-  color: #666;
+  color: #667eea;
+  font-size: 16px;
 `;
 
 const ContentSection = styled.div`
   background: white;
-  border-radius: 16px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  border-radius: 20px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
   overflow: hidden;
-  margin-bottom: 20px;
+  margin-bottom: 24px;
   border: 1px solid rgba(102, 126, 234, 0.1);
+  position: relative;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+  }
 `;
 
 const SectionHeader = styled.div`
-  padding: 16px 20px;
-  border-bottom: 1px solid #eee;
+  padding: 20px 24px;
+  border-bottom: 1px solid #f1f3f4;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -96,12 +136,15 @@ const SectionHeader = styled.div`
 `;
 
 const SectionTitle = styled.h2`
-  font-size: 20px;
+  font-size: 22px;
   color: #333;
   font-weight: 600;
   line-height: 1.3;
   text-align: right;
   margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 `;
 
 const Beneficiaries: React.FC = () => {
@@ -109,6 +152,8 @@ const Beneficiaries: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedBeneficiary, setSelectedBeneficiary] = useState<Beneficiary | null>(null);
   const [showDetailsModal, setShowDetailsModal] = useState(false);
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
 
   // Filter beneficiaries based on search term
   const filteredBeneficiaries = useMemo(() => {
@@ -122,7 +167,7 @@ const Beneficiaries: React.FC = () => {
     );
   }, [data.beneficiaries, searchTerm]);
 
-  const handleExport = (format: 'pdf' | 'excel', options?: any) => {
+  const handleExport = (format: 'pdf' | 'excel') => {
     if (format === 'pdf') {
       const success = exportBeneficiariesToPDF(data.beneficiaries);
       if (success) {
@@ -145,11 +190,20 @@ const Beneficiaries: React.FC = () => {
     setShowDetailsModal(true);
   };
 
+  const handleAddBeneficiary = () => {
+    setShowAddModal(true);
+  };
+
+  const handleEditBeneficiary = () => {
+    setShowEditModal(true);
+    setShowDetailsModal(false);
+  };
+
   const columns: TableColumn<Beneficiary>[] = [
     {
       key: 'firstName',
       label: 'الاسم الكامل',
-      render: (value, item) => `${item.firstName} ${item.secondName} ${item.thirdName} ${item.lastName}`
+      render: (_, item) => `${item.firstName} ${item.secondName} ${item.thirdName} ${item.lastName}`
     },
     {
       key: 'nationalId',
@@ -194,8 +248,24 @@ const Beneficiaries: React.FC = () => {
   return (
     <PageContainer>
       <PageHeader>
-        <PageTitle>المستفيدين</PageTitle>
-        <PageSubtitle>إدارة بيانات المستفيدين من المساعدات</PageSubtitle>
+        <div className="flex items-center justify-between">
+          <div>
+            <PageTitle>
+              <i className="fas fa-users ml-3"></i>
+              المستفيدين
+            </PageTitle>
+            <PageSubtitle>إدارة بيانات المستفيدين من المساعدات</PageSubtitle>
+          </div>
+          <div className="flex items-center gap-4">
+            <div className="text-right">
+              <p className="text-sm text-white/80">إجمالي المستفيدين</p>
+              <p className="text-2xl font-bold text-white">{data.beneficiaries.length}</p>
+            </div>
+            <div className="w-16 h-16 bg-white/20  rounded-full flex items-center justify-center">
+              <i className="fas fa-user-friends text-white text-2xl"></i>
+            </div>
+          </div>
+        </div>
       </PageHeader>
 
       <PageActions>
@@ -208,8 +278,8 @@ const Beneficiaries: React.FC = () => {
           />
           <SearchIcon className="fas fa-search"></SearchIcon>
         </SearchContainer>
-        <div style={{ display: 'flex', gap: '12px' }}>
-          <Button variant="primary">
+        <div className="flex gap-3">
+          <Button variant="primary" onClick={handleAddBeneficiary}>
             <i className="fas fa-plus"></i>
             إضافة مستفيد
           </Button>
@@ -222,7 +292,10 @@ const Beneficiaries: React.FC = () => {
 
       <ContentSection>
         <SectionHeader>
-          <SectionTitle>قائمة المستفيدين ({filteredBeneficiaries.length})</SectionTitle>
+          <SectionTitle>
+            <i className="fas fa-list text-primary-500"></i>
+            قائمة المستفيدين ({filteredBeneficiaries.length})
+          </SectionTitle>
         </SectionHeader>
         <DataTable
           data={filteredBeneficiaries}
@@ -301,13 +374,65 @@ const Beneficiaries: React.FC = () => {
               <Button variant="secondary" onClick={() => setShowDetailsModal(false)}>
                 إغلاق
               </Button>
-              <Button variant="primary">
+              <Button variant="primary" onClick={handleEditBeneficiary}>
                 <i className="fas fa-edit"></i>
                 تعديل
               </Button>
             </div>
           </div>
         )}
+      </Modal>
+
+      {/* Add Beneficiary Modal */}
+      <Modal
+        isOpen={showAddModal}
+        onClose={() => setShowAddModal(false)}
+        title="إضافة مستفيد جديد"
+        size="lg"
+      >
+        <div style={{ padding: '20px' }}>
+          <p>نموذج إضافة مستفيد جديد - قيد التطوير</p>
+          <div style={{ 
+            display: 'flex', 
+            gap: '12px', 
+            justifyContent: 'flex-end',
+            marginTop: '20px'
+          }}>
+            <Button variant="secondary" onClick={() => setShowAddModal(false)}>
+              إلغاء
+            </Button>
+            <Button variant="primary">
+              <i className="fas fa-save"></i>
+              حفظ
+            </Button>
+          </div>
+        </div>
+      </Modal>
+
+      {/* Edit Beneficiary Modal */}
+      <Modal
+        isOpen={showEditModal}
+        onClose={() => setShowEditModal(false)}
+        title="تعديل بيانات المستفيد"
+        size="lg"
+      >
+        <div style={{ padding: '20px' }}>
+          <p>نموذج تعديل بيانات المستفيد - قيد التطوير</p>
+          <div style={{ 
+            display: 'flex', 
+            gap: '12px', 
+            justifyContent: 'flex-end',
+            marginTop: '20px'
+          }}>
+            <Button variant="secondary" onClick={() => setShowEditModal(false)}>
+              إلغاء
+            </Button>
+            <Button variant="primary">
+              <i className="fas fa-save"></i>
+              حفظ التغييرات
+            </Button>
+          </div>
+        </div>
       </Modal>
     </PageContainer>
   );

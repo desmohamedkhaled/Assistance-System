@@ -3,6 +3,7 @@ import { useApp } from '@/context/AppContext';
 import styled from 'styled-components';
 import { Assistance, TableColumn } from '@/types';
 import { formatCurrency, formatDate } from '@/utils/format';
+import { exportAdminRequestsToExcel } from '@/utils/export';
 import DataTable from '@/components/UI/Table';
 import Button from '@/components/UI/Button';
 import Modal from '@/components/UI/Modal';
@@ -234,8 +235,13 @@ const AdminRequests: React.FC = () => {
     };
   }, [data.assistances]);
 
-  const handleExport = (format: 'pdf' | 'excel', options?: any) => {
-    toast('تصدير طلبات الإدارة قيد التطوير', { icon: 'ℹ️' });
+  const handleExport = (format: 'pdf' | 'excel', options?: Record<string, unknown>) => {
+    const success = exportAdminRequestsToExcel(filteredData);
+    if (success) {
+      toast.success('تم تصدير البيانات بنجاح');
+    } else {
+      toast.error('حدث خطأ أثناء تصدير البيانات');
+    }
   };
 
   const handleRowClick = (request: Assistance) => {

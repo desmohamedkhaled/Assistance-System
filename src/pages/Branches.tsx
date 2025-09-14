@@ -3,6 +3,7 @@ import { useApp } from '@/context/AppContext';
 import styled from 'styled-components';
 import { Branch, TableColumn } from '@/types';
 import { formatDate } from '@/utils/format';
+import { exportBranchesToExcel } from '@/utils/export';
 import DataTable from '@/components/UI/Table';
 import Button from '@/components/UI/Button';
 import Modal from '@/components/UI/Modal';
@@ -209,8 +210,13 @@ const Branches: React.FC = () => {
     };
   }, [data.branches, data.users]);
 
-  const handleExport = (format: 'pdf' | 'excel', options?: any) => {
-    toast('تصدير بيانات الفروع قيد التطوير', { icon: 'ℹ️' });
+  const handleExport = (format: 'pdf' | 'excel', options?: Record<string, unknown>) => {
+    const success = exportBranchesToExcel(filteredData);
+    if (success) {
+      toast.success('تم تصدير البيانات بنجاح');
+    } else {
+      toast.error('حدث خطأ أثناء تصدير البيانات');
+    }
   };
 
   const handleRowClick = (branch: Branch) => {

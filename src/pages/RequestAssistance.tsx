@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useApp } from '@/context/AppContext';
+import { useAuth } from '@/context/AuthContext';
 import styled from 'styled-components';
 import Button from '@/components/UI/Button';
 import Modal from '@/components/UI/Modal';
@@ -154,6 +155,7 @@ const InfoText = styled.p`
 
 const RequestAssistance: React.FC = () => {
   const { data } = useApp();
+  const { user } = useAuth();
   const [formData, setFormData] = useState({
     beneficiaryId: '',
     assistanceType: '',
@@ -178,6 +180,27 @@ const RequestAssistance: React.FC = () => {
     setIsSubmitting(true);
 
     try {
+      // Validate form data
+      if (!formData.beneficiaryId || !formData.assistanceType || !formData.amount || !formData.paymentMethod) {
+        toast.error('يرجى ملء جميع الحقول المطلوبة');
+        setIsSubmitting(false);
+        return;
+      }
+
+      // Validate amount
+      const amount = parseFloat(formData.amount);
+      if (isNaN(amount) || amount <= 0) {
+        toast.error('يرجى إدخال مبلغ صحيح');
+        setIsSubmitting(false);
+        return;
+      }
+
+      if (amount > 1000000) {
+        toast.error('المبلغ المطلوب كبير جداً');
+        setIsSubmitting(false);
+        return;
+      }
+
       // Simulate API call
       await new Promise(resolve => setTimeout(resolve, 2000));
       
@@ -219,7 +242,12 @@ const RequestAssistance: React.FC = () => {
     <PageContainer>
       <PageHeader>
         <PageTitle>طلب مساعدة</PageTitle>
-        <PageSubtitle>تقديم طلب مساعدة جديدة للمستفيدين</PageSubtitle>
+        <PageSubtitle>
+          {user?.role === 'beneficiary' 
+            ? `مرحباً ${user.fullName}، يمكنك تقديم طلب مساعدة جديدة`
+            : 'تقديم طلب مساعدة جديدة للمستفيدين'
+          }
+        </PageSubtitle>
       </PageHeader>
 
       <InfoCard>

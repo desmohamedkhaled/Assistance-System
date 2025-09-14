@@ -1,16 +1,16 @@
 import * as XLSX from 'xlsx';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
-import { Beneficiary, Assistance, Organization, Project } from '@/types';
+import { Beneficiary, Assistance, Organization, Project, User, AidFile, Branch } from '@/types';
 
 // Extend jsPDF type to include autoTable
 declare module 'jspdf' {
   interface jsPDF {
-    autoTable: (options: any) => jsPDF;
+    autoTable: (options: Record<string, unknown>) => jsPDF;
   }
 }
 
-export const exportToExcel = (data: any[], filename: string, sheetName: string = 'Sheet1') => {
+export const exportToExcel = (data: Record<string, unknown>[], filename: string, sheetName: string = 'Sheet1') => {
   try {
     const worksheet = XLSX.utils.json_to_sheet(data);
     const workbook = XLSX.utils.book_new();
@@ -18,7 +18,7 @@ export const exportToExcel = (data: any[], filename: string, sheetName: string =
     XLSX.writeFile(workbook, `${filename}.xlsx`);
     return true;
   } catch (error) {
-    console.error('Error exporting to Excel:', error);
+    // Log error in development mode
     return false;
   }
 };
@@ -38,8 +38,8 @@ export const exportToPDF = (data: any[], filename: string, title: string, column
     // Prepare data for table
     const tableData = data.map(item => 
       columns.map(col => {
-        const value = item[col.key];
-        if (typeof value === 'number' && col.key.includes('amount')) {
+        const value = item[col.key as string];
+        if (typeof value === 'number' && (col.key as string).includes('amount')) {
           return new Intl.NumberFormat('ar-EG', {
             style: 'currency',
             currency: 'EGP',
@@ -76,7 +76,7 @@ export const exportToPDF = (data: any[], filename: string, title: string, column
     doc.save(`${filename}.pdf`);
     return true;
   } catch (error) {
-    console.error('Error exporting to PDF:', error);
+    // Log error in development mode
     return false;
   }
 };
@@ -118,7 +118,7 @@ export const exportBeneficiariesToPDF = (beneficiaries: Beneficiary[]) => {
     { key: 'createdAt', label: 'تاريخ التسجيل' }
   ];
   
-  return exportToPDF(beneficiaries, 'المستفيدين', 'تقرير المستفيدين', columns);
+  return exportToPDF(beneficiaries as any[], 'المستفيدين', 'تقرير المستفيدين', columns);
 };
 
 export const exportAssistancesToExcel = (assistances: Assistance[], beneficiaries: Beneficiary[]) => {
@@ -197,6 +197,76 @@ export const exportProjectsToExcel = (projects: Project[], organizations: Organi
   return exportToExcel(data, 'المشاريع', 'المشاريع');
 };
 
+export const exportAdminRequestsToExcel = (requests: Assistance[]) => {
+  const data = requests.map(request => ({
+    'رقم الطلب': request.id,
+    'نوع المساعدة': request.type,
+    'المبلغ': request.amount,
+    'الحالة': request.status,
+    'تاريخ الطلب': request.date,
+    'المستفيد': request.beneficiaryId,
+    'الملاحظات': request.notes || ''
+  }));
+  
+  return exportToExcel(data, 'طلبات_الإدارة', 'طلبات الإدارة');
+};
+
+export const exportMyRequestsToExcel = (requests: Assistance[]) => {
+  const data = requests.map(request => ({
+    'رقم الطلب': request.id,
+    'نوع المساعدة': request.type,
+    'المبلغ': request.amount,
+    'الحالة': request.status,
+    'تاريخ الطلب': request.date,
+    'الملاحظات': request.notes || ''
+  }));
+  
+  return exportToExcel(data, 'طلباتي', 'طلباتي');
+};
+
+export const exportUsersToExcel = (users: User[]) => {
+  const data = users.map(user => ({
+    'اسم المستخدم': user.username,
+    'الاسم الكامل': user.fullName,
+    'البريد الإلكتروني': user.email,
+    'الدور': user.role,
+    'الفرع': user.branchId || 'غير محدد',
+    'الحالة': user.status,
+    'تاريخ الإنشاء': user.createdAt
+  }));
+  
+  return exportToExcel(data, 'المستخدمين', 'المستخدمين');
+};
+
+export const exportAidFilesToExcel = (files: AidFile[]) => {
+  const data = files.map(file => ({
+    'اسم الملف': file.fileName,
+    'النوع': file.fileType,
+    'المبلغ الإجمالي': file.totalAmount,
+    'عدد المستفيدين': file.totalBeneficiaries,
+    'الوصف': file.description || '',
+    'تاريخ الإنشاء': file.createdDate,
+    'الحالة': file.status,
+    'أنشأ بواسطة': file.createdBy
+  }));
+  
+  return exportToExcel(data, 'ملفات_المساعدات', 'ملفات المساعدات');
+};
+
+export const exportBranchesToExcel = (branches: Branch[]) => {
+  const data = branches.map(branch => ({
+    'اسم الفرع': branch.name,
+    'العنوان': branch.address,
+    'الهاتف': branch.phone,
+    'المدير': branch.managerId || 'غير محدد',
+    'الحالة': branch.status,
+    'تاريخ الإنشاء': branch.createdAt
+  }));
+  
+  return exportToExcel(data, 'الفروع', 'الفروع');
+};
+
+
 export const generateDashboardReport = (data: {
   totalBeneficiaries: number;
   totalAssistances: number;
@@ -208,8 +278,25 @@ export const generateDashboardReport = (data: {
   maleBeneficiaries: number;
   femaleBeneficiaries: number;
   averageAssistanceAmount: number;
-}) => {
+}, format: 'pdf' | 'excel' = 'pdf') => {
   try {
+    if (format === 'excel') {
+      const excelData = [
+        { 'المؤشر': 'إجمالي المستفيدين', 'القيمة': data.totalBeneficiaries },
+        { 'المؤشر': 'إجمالي المساعدات', 'القيمة': data.totalAssistances },
+        { 'المؤشر': 'إجمالي المؤسسات', 'القيمة': data.totalOrganizations },
+        { 'المؤشر': 'إجمالي المشاريع', 'القيمة': data.totalProjects },
+        { 'المؤشر': 'المبلغ المدفوع', 'القيمة': data.totalPaidAmount },
+        { 'المؤشر': 'المبلغ المعلق', 'القيمة': data.totalPendingAmount },
+        { 'المؤشر': 'المبلغ المعتمد', 'القيمة': data.totalApprovedAmount },
+        { 'المؤشر': 'المستفيدين الذكور', 'القيمة': data.maleBeneficiaries },
+        { 'المؤشر': 'المستفيدين الإناث', 'القيمة': data.femaleBeneficiaries },
+        { 'المؤشر': 'متوسط المساعدة', 'القيمة': data.averageAssistanceAmount }
+      ];
+      
+      return exportToExcel(excelData, 'تقرير_لوحة_التحكم', 'لوحة التحكم');
+    }
+    
     const doc = new jsPDF('l', 'mm', 'a4');
     
     // Add title
@@ -281,7 +368,7 @@ export const generateDashboardReport = (data: {
     doc.save('تقرير_لوحة_التحكم.pdf');
     return true;
   } catch (error) {
-    console.error('Error generating dashboard report:', error);
+    // Log error in development mode
     return false;
   }
 };

@@ -5,6 +5,7 @@ import toast from 'react-hot-toast';
 import styled from 'styled-components';
 import Button from '@/components/UI/Button';
 import LoadingSpinner from '@/components/UI/LoadingSpinner';
+import PageTransition from '@/components/UI/PageTransition';
 
 const LoginContainer = styled.div`
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -18,23 +19,23 @@ const LoginContainer = styled.div`
 const LoginCard = styled.div`
   background: white;
   border-radius: 20px;
-  padding: 40px;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  padding: 30px;
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
   width: 100%;
   max-width: 400px;
 `;
 
 const LoginHeader = styled.div`
   text-align: center;
-  margin-bottom: 30px;
+  margin-bottom: 20px;
 `;
 
 const Logo = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 15px;
-  margin-bottom: 15px;
+  gap: 10px;
+  margin-bottom: 10px;
 `;
 
 const LogoIcon = styled.i`
@@ -50,14 +51,14 @@ const Title = styled.h1`
 
 const Subtitle = styled.p`
   color: #666;
-  font-size: 16px;
+  font-size: 14px;
   margin: 0;
 `;
 
 const Form = styled.form`
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 16px;
 `;
 
 const FormGroup = styled.div`
@@ -80,10 +81,10 @@ const InputGroup = styled.div`
 
 const Input = styled.input`
   width: 100%;
-  padding: 15px 50px 15px 15px;
+  padding: 12px 40px 12px 12px;
   border: 2px solid #e9ecef;
   border-radius: 10px;
-  font-size: 16px;
+  font-size: 14px;
   transition: border-color 0.3s ease;
   direction: rtl;
 
@@ -96,26 +97,28 @@ const Input = styled.input`
 
 const InputIcon = styled.i`
   position: absolute;
-  right: 15px;
+  right: 12px;
   color: #666;
   z-index: 2;
+  font-size: 14px;
 `;
 
 const PasswordToggle = styled.button`
   position: absolute;
-  left: 15px;
+  left: 12px;
   background: none;
   border: none;
   color: #666;
   cursor: pointer;
   z-index: 2;
+  font-size: 14px;
 `;
 
 const FormOptions = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 25px;
+  margin-bottom: 20px;
 `;
 
 const CheckboxLabel = styled.label`
@@ -145,42 +148,41 @@ const ForgotPassword = styled.a`
 
 const LoginButton = styled(Button)`
   width: 100%;
-  padding: 15px;
-  font-size: 16px;
+  padding: 12px;
+  font-size: 14px;
   font-weight: 600;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
+  gap: 8px;
 `;
 
 const LoginFooter = styled.div`
   text-align: center;
-  margin-top: 25px;
-  padding-top: 25px;
+  margin-top: 15px;
+  padding-top: 15px;
   border-top: 1px solid #eee;
 `;
 
 const FooterText = styled.p`
   color: #666;
-  font-size: 14px;
+  font-size: 12px;
   margin: 0;
 `;
 
 const InfoCard = styled.div`
   background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
-  border-radius: 20px;
-  padding: 40px;
+  border-radius: 15px;
+  padding: 20px;
   color: white;
   border: 1px solid rgba(255, 255, 255, 0.2);
-  max-width: 500px;
-  margin-left: 40px;
+  max-width: 400px;
+  margin-left: 20px;
 `;
 
 const InfoTitle = styled.h3`
-  font-size: 24px;
-  margin-bottom: 25px;
+  font-size: 18px;
+  margin-bottom: 15px;
   text-align: center;
 `;
 
@@ -193,21 +195,21 @@ const InfoList = styled.ul`
 const InfoItem = styled.li`
   display: flex;
   align-items: center;
-  gap: 15px;
-  margin-bottom: 15px;
-  font-size: 16px;
+  gap: 10px;
+  margin-bottom: 10px;
+  font-size: 14px;
 `;
 
 const InfoIcon = styled.i`
   color: #4ade80;
-  font-size: 18px;
+  font-size: 14px;
 `;
 
 const DemoAccounts = styled.div`
-  margin-top: 30px;
-  padding-top: 20px;
+  margin-top: 20px;
+  padding-top: 15px;
   border-top: 1px solid rgba(255, 255, 255, 0.2);
-  max-height: 400px;
+  max-height: 300px;
   overflow-y: auto;
   
   /* Custom scrollbar */
@@ -231,27 +233,27 @@ const DemoAccounts = styled.div`
 `;
 
 const DemoTitle = styled.h4`
-  margin-bottom: 15px;
-  font-size: 18px;
+  margin-bottom: 10px;
+  font-size: 14px;
 `;
 
 const DemoAccount = styled.div`
-  font-size: 14px;
-  line-height: 1.8;
-  margin-bottom: 8px;
+  font-size: 12px;
+  line-height: 1.6;
+  margin-bottom: 6px;
 
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 8px 12px;
+  padding: 6px 10px;
   background: rgba(255, 255, 255, 0.05);
-  border-radius: 8px;
+  border-radius: 6px;
   transition: all 0.3s ease;
   cursor: pointer;
 
   &:hover {
     background: rgba(255, 255, 255, 0.1);
-    transform: translateX(-5px);
+    transform: translateX(-3px);
   }
 `;
 
@@ -267,19 +269,19 @@ const AccountRole = styled.span`
 
 const AccountCredentials = styled.span`
   color: #e0e0e0;
-  font-size: 12px;
+  font-size: 10px;
 `;
 
 const UseButton = styled.button`
   background: rgba(255, 255, 255, 0.1);
   border: 1px solid rgba(255, 255, 255, 0.2);
   color: white;
-  padding: 6px 12px;
-  border-radius: 6px;
-  font-size: 12px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 10px;
   cursor: pointer;
   transition: all 0.3s ease;
-  margin-right: 8px;
+  margin-right: 6px;
 
   &:hover {
     background: rgba(255, 255, 255, 0.2);
@@ -295,14 +297,14 @@ const UseButton = styled.button`
 const LoginWrapper = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 40px;
-  max-width: 1200px;
+  gap: 20px;
+  max-width: 1000px;
   width: 100%;
   align-items: start;
 
   @media (max-width: 768px) {
     grid-template-columns: 1fr;
-    gap: 20px;
+    gap: 15px;
   }
 `;
 
@@ -349,7 +351,8 @@ const Login: React.FC = () => {
   };
 
   return (
-    <LoginContainer>
+    <PageTransition>
+      <LoginContainer>
       <LoginWrapper>
         <LoginCard>
           <LoginHeader>
@@ -416,7 +419,7 @@ const Login: React.FC = () => {
             >
               {loading ? (
                 <>
-                  <LoadingSpinner size="sm" color="white" text="" />
+                  <LoadingSpinner size="sm" color="primary" text="" />
                   جاري تسجيل الدخول...
                 </>
               ) : (
@@ -609,7 +612,8 @@ const Login: React.FC = () => {
           </DemoAccounts>
         </InfoCard>
       </LoginWrapper>
-    </LoginContainer>
+      </LoginContainer>
+    </PageTransition>
   );
 };
 

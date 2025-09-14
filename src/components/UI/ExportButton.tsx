@@ -1,143 +1,35 @@
 import React, { useState } from 'react';
-import styled from 'styled-components';
 import Button from './Button';
 import Modal from './Modal';
 
-const ExportContainer = styled.div`
-  position: relative;
-`;
-
-const ExportMenu = styled.div`
-  position: absolute;
-  top: 100%;
-  right: 0;
-  background: white;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  border: 1px solid #e9ecef;
-  z-index: 1000;
-  min-width: 200px;
-  overflow: hidden;
-`;
-
-const ExportMenuItem = styled.button`
-  width: 100%;
-  padding: 12px 16px;
-  border: none;
-  background: none;
-  text-align: right;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 14px;
-  color: #333;
-
-  &:hover {
-    background-color: #f8f9fa;
-  }
-
-  &:first-child {
-    border-top-left-radius: 8px;
-    border-top-right-radius: 8px;
-  }
-
-  &:last-child {
-    border-bottom-left-radius: 8px;
-    border-bottom-right-radius: 8px;
-  }
-
-  i {
-    color: #667eea;
-    width: 16px;
-  }
-`;
-
-const ExportModal = styled(Modal)`
-  .modal-content {
-    max-width: 500px;
-  }
-`;
-
-const ExportOptions = styled.div`
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 16px;
-  margin-bottom: 20px;
-`;
-
-const ExportOption = styled.button<{ $selected: boolean }>`
-  padding: 16px;
-  border: 2px solid ${props => props.$selected ? '#667eea' : '#e9ecef'};
-  border-radius: 8px;
-  background: ${props => props.$selected ? 'rgba(102, 126, 234, 0.1)' : 'white'};
-  cursor: pointer;
-  transition: all 0.3s ease;
-  text-align: center;
-
-  &:hover {
-    border-color: #667eea;
-    background: rgba(102, 126, 234, 0.05);
-  }
-
-  i {
-    font-size: 24px;
-    color: #667eea;
-    margin-bottom: 8px;
-    display: block;
-  }
-
-  span {
-    font-size: 14px;
-    font-weight: 500;
-    color: #333;
-  }
-`;
-
-const DateRangeContainer = styled.div`
-  margin-bottom: 20px;
-`;
-
-const DateRangeLabel = styled.label`
-  display: block;
-  margin-bottom: 8px;
-  font-size: 14px;
-  font-weight: 500;
-  color: #333;
-`;
-
-const DateInputs = styled.div`
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-`;
-
-const DateInput = styled.input`
-  padding: 8px 12px;
-  border: 1px solid #ddd;
-  border-radius: 6px;
-  font-size: 14px;
-  direction: ltr;
-  text-align: center;
-
-  &:focus {
-    outline: none;
-    border-color: #667eea;
-    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-  }
-`;
-
 interface ExportButtonProps {
-  onExport: (format: 'pdf' | 'excel', options?: any) => void;
+  onExport: (format: 'pdf' | 'excel', options?: Record<string, unknown>) => void;
   loading?: boolean;
   dataType?: string;
+  className?: string;
 }
 
+/**
+ * Enhanced Export Button Component
+ * 
+ * A versatile export button with dropdown menu and advanced export options.
+ * Features format selection, date range filtering, and smooth animations.
+ * 
+ * Features:
+ * - Dropdown menu with export options
+ * - PDF and Excel format support
+ * - Date range filtering
+ * - Advanced export options modal
+ * - Loading states
+ * - Smooth animations
+ * - Accessibility support
+ * - RTL support for Arabic content
+ */
 const ExportButton: React.FC<ExportButtonProps> = ({ 
   onExport, 
   loading = false, 
-  dataType = 'البيانات' 
+  dataType = 'البيانات',
+  className = ''
 }) => {
   const [showMenu, setShowMenu] = useState(false);
   const [showModal, setShowModal] = useState(false);
@@ -163,91 +55,126 @@ const ExportButton: React.FC<ExportButtonProps> = ({
   };
 
   const formatOptions = [
-    { key: 'pdf', label: 'PDF', icon: 'fas fa-file-pdf' },
-    { key: 'excel', label: 'Excel', icon: 'fas fa-file-excel' }
+    { key: 'pdf', label: 'PDF', icon: 'fas fa-file-pdf', color: 'text-red-500' },
+    { key: 'excel', label: 'Excel', icon: 'fas fa-file-excel', color: 'text-green-500' }
   ];
 
   return (
-    <ExportContainer>
+    <div className={`relative ${className}`}>
+      {/* Export Button */}
       <Button
         variant="secondary"
         onClick={() => setShowMenu(!showMenu)}
         loading={loading}
+        className="relative"
       >
         <i className="fas fa-download"></i>
         تصدير {dataType}
+        <i className={`fas fa-chevron-down transition-transform duration-200 ${showMenu ? 'rotate-180' : ''}`}></i>
       </Button>
 
+      {/* Dropdown Menu */}
       {showMenu && (
         <>
+          {/* Backdrop */}
           <div 
-            style={{ 
-              position: 'fixed', 
-              top: 0, 
-              left: 0, 
-              right: 0, 
-              bottom: 0, 
-              zIndex: 999 
-            }} 
+            className="fixed inset-0 z-40" 
             onClick={() => setShowMenu(false)}
           />
-          <ExportMenu>
-            <ExportMenuItem onClick={() => handleExport('pdf')}>
-              <i className="fas fa-file-pdf"></i>
-              تصدير PDF
-            </ExportMenuItem>
-            <ExportMenuItem onClick={() => handleExport('excel')}>
-              <i className="fas fa-file-excel"></i>
-              تصدير Excel
-            </ExportMenuItem>
-            <ExportMenuItem onClick={() => handleExport('both')}>
-              <i className="fas fa-cog"></i>
-              خيارات متقدمة
-            </ExportMenuItem>
-          </ExportMenu>
+          
+          {/* Menu */}
+          <div className="absolute top-full right-0 mt-2 bg-white rounded-xl shadow-2xl border border-gray-200/50  z-50 min-w-[200px] overflow-hidden animate-fade-in">
+            <div className="py-2">
+              <button
+                onClick={() => handleExport('pdf')}
+                className="w-full px-4 py-3 text-right hover:bg-gray-50 transition-colors duration-200 flex items-center gap-3 text-gray-700 hover:text-primary-600"
+              >
+                <i className="fas fa-file-pdf text-red-500 w-4"></i>
+                تصدير PDF
+              </button>
+              <button
+                onClick={() => handleExport('excel')}
+                className="w-full px-4 py-3 text-right hover:bg-gray-50 transition-colors duration-200 flex items-center gap-3 text-gray-700 hover:text-primary-600"
+              >
+                <i className="fas fa-file-excel text-green-500 w-4"></i>
+                تصدير Excel
+              </button>
+              <div className="border-t border-gray-200 my-1"></div>
+              <button
+                onClick={() => handleExport('both')}
+                className="w-full px-4 py-3 text-right hover:bg-gray-50 transition-colors duration-200 flex items-center gap-3 text-gray-700 hover:text-primary-600"
+              >
+                <i className="fas fa-cog text-primary-500 w-4"></i>
+                خيارات متقدمة
+              </button>
+            </div>
+          </div>
         </>
       )}
 
-      <ExportModal
+      {/* Export Options Modal */}
+      <Modal
         isOpen={showModal}
         onClose={() => setShowModal(false)}
         title="خيارات التصدير"
         size="md"
       >
-        <ExportOptions>
-          {formatOptions.map(option => (
-            <ExportOption
-              key={option.key}
-              $selected={selectedFormat === option.key}
-              onClick={() => setSelectedFormat(option.key as 'pdf' | 'excel')}
-            >
-              <i className={option.icon}></i>
-              <span>{option.label}</span>
-            </ExportOption>
-          ))}
-        </ExportOptions>
+        {/* Format Selection */}
+        <div className="mb-6">
+          <h3 className="text-lg font-semibold text-gray-900 mb-4">اختر تنسيق التصدير</h3>
+          <div className="grid grid-cols-2 gap-4">
+            {formatOptions.map(option => (
+              <button
+                key={option.key}
+                onClick={() => setSelectedFormat(option.key as 'pdf' | 'excel')}
+                className={`
+                  p-4 border-2 rounded-xl transition-all duration-200 text-center
+                  ${selectedFormat === option.key 
+                    ? 'border-primary-500 bg-primary-50 shadow-md' 
+                    : 'border-gray-200 bg-white hover:border-primary-300 hover:bg-primary-25'
+                  }
+                `}
+              >
+                <i className={`${option.icon} ${option.color} text-2xl mb-2 block`}></i>
+                <span className="text-sm font-medium text-gray-700">{option.label}</span>
+              </button>
+            ))}
+          </div>
+        </div>
 
-        <DateRangeContainer>
-          <DateRangeLabel>نطاق التاريخ (اختياري)</DateRangeLabel>
-          <DateInputs>
-            <DateInput
-              type="date"
-              value={dateRange.startDate}
-              onChange={(e) => setDateRange(prev => ({ ...prev, startDate: e.target.value }))}
-              placeholder="من تاريخ"
-            />
-            <DateInput
-              type="date"
-              value={dateRange.endDate}
-              onChange={(e) => setDateRange(prev => ({ ...prev, endDate: e.target.value }))}
-              placeholder="إلى تاريخ"
-            />
-          </DateInputs>
-        </DateRangeContainer>
+        {/* Date Range Selection */}
+        <div className="mb-6">
+          <label className="block text-sm font-medium text-gray-700 mb-3">
+            نطاق التاريخ (اختياري)
+          </label>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-xs text-gray-500 mb-1">من تاريخ</label>
+              <input
+                type="date"
+                value={dateRange.startDate}
+                onChange={(e) => setDateRange(prev => ({ ...prev, startDate: e.target.value }))}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                dir="ltr"
+              />
+            </div>
+            <div>
+              <label className="block text-xs text-gray-500 mb-1">إلى تاريخ</label>
+              <input
+                type="date"
+                value={dateRange.endDate}
+                onChange={(e) => setDateRange(prev => ({ ...prev, endDate: e.target.value }))}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                dir="ltr"
+              />
+            </div>
+          </div>
+        </div>
 
-        <div style={{ display: 'flex', gap: '12px', justifyContent: 'flex-end' }}>
+        {/* Action Buttons */}
+        <div className="flex justify-end" style={{ gap: '0.75rem' }}>
           <Button
-            variant="secondary"
+            variant="outline"
             onClick={() => setShowModal(false)}
           >
             إلغاء
@@ -260,8 +187,8 @@ const ExportButton: React.FC<ExportButtonProps> = ({
             تصدير {selectedFormat === 'pdf' ? 'PDF' : 'Excel'}
           </Button>
         </div>
-      </ExportModal>
-    </ExportContainer>
+      </Modal>
+    </div>
   );
 };
 

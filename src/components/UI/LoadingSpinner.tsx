@@ -1,76 +1,90 @@
 import React from 'react';
-import styled from 'styled-components';
 
 interface LoadingSpinnerProps {
-  size?: 'sm' | 'md' | 'lg';
-  color?: string;
+  size?: 'sm' | 'md' | 'lg' | 'xl';
+  color?: 'primary' | 'secondary' | 'success' | 'danger' | 'warning' | 'info';
   text?: string;
   fullScreen?: boolean;
+  className?: string;
 }
 
-const SpinnerContainer = styled.div<{ $fullScreen: boolean; $size: string }>`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 16px;
-  
-  ${props => props.$fullScreen && `
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(255, 255, 255, 0.9);
-    backdrop-filter: blur(5px);
-    z-index: 10000;
-  `}
-`;
-
-const Spinner = styled.div<{ $size: string; $color: string }>`
-  border: 4px solid #f3f3f3;
-  border-top: 4px solid ${props => props.$color};
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-  
-  ${props => {
-    switch (props.$size) {
-      case 'sm':
-        return 'width: 20px; height: 20px; border-width: 2px;';
-      case 'md':
-        return 'width: 40px; height: 40px; border-width: 4px;';
-      case 'lg':
-        return 'width: 60px; height: 60px; border-width: 6px;';
-      default:
-        return 'width: 40px; height: 40px; border-width: 4px;';
-    }
-  }}
-
-  @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-  }
-`;
-
-const LoadingText = styled.p`
-  color: #667eea;
-  font-size: 18px;
-  font-weight: 500;
-  margin: 0;
-  text-align: center;
-`;
-
+/**
+ * Enhanced Loading Spinner Component
+ * 
+ * A versatile loading spinner with multiple sizes, colors, and display options.
+ * Features smooth animations and customizable appearance.
+ * 
+ * Features:
+ * - Multiple sizes (sm, md, lg, xl)
+ * - Multiple color variants
+ * - Optional loading text
+ * - Full screen overlay option
+ * - Smooth animations
+ * - Accessibility support
+ * - RTL support for Arabic content
+ */
 const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
   size = 'md',
-  color = '#667eea',
+  color = 'primary',
   text = 'جاري التحميل...',
-  fullScreen = false
+  fullScreen = false,
+  className = ''
 }) => {
+  // Size classes
+  const sizeClasses = {
+    sm: 'w-5 h-5 border-2',
+    md: 'w-10 h-10 border-4',
+    lg: 'w-16 h-16 border-4',
+    xl: 'w-20 h-20 border-6'
+  };
+
+  // Color classes
+  const colorClasses = {
+    primary: 'border-primary-200 border-t-primary-500',
+    secondary: 'border-gray-200 border-t-secondary-500',
+    success: 'border-gray-200 border-t-success-500',
+    danger: 'border-gray-200 border-t-danger-500',
+    warning: 'border-gray-200 border-t-warning-500',
+    info: 'border-gray-200 border-t-info-500'
+  };
+
+  // Text size classes
+  const textSizeClasses = {
+    sm: 'text-sm',
+    md: 'text-base',
+    lg: 'text-lg',
+    xl: 'text-xl'
+  };
+
+  const containerClasses = `
+    flex flex-col items-center justify-center
+    ${fullScreen ? 'fixed inset-0 bg-white/90  z-50' : ''}
+    ${className}
+  `;
+
+  const spinnerClasses = `
+    ${sizeClasses[size]}
+    ${colorClasses[color]}
+    rounded-full animate-spin
+  `;
+
+  const textClasses = `
+    ${textSizeClasses[size]}
+    font-medium text-gray-600 mt-4 text-center
+  `;
+
   return (
-    <SpinnerContainer $fullScreen={fullScreen} $size={size}>
-      <Spinner $size={size} $color={color} />
-      {text && <LoadingText>{text}</LoadingText>}
-    </SpinnerContainer>
+    <div className={containerClasses}>
+      {/* Spinner */}
+      <div className={spinnerClasses} />
+      
+      {/* Loading text */}
+      {text && (
+        <p className={textClasses}>
+          {text}
+        </p>
+      )}
+    </div>
   );
 };
 

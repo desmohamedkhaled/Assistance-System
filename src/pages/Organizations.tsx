@@ -15,26 +15,47 @@ const PageContainer = styled.div`
 `;
 
 const PageHeader = styled.div`
-  margin-bottom: 24px;
-  padding-bottom: 16px;
-  border-bottom: 1px solid #e9ecef;
+  margin-bottom: 32px;
+  padding: 24px;
+  background: linear-gradient(135deg, #dc3545 0%, #fd7e14 100%);
+  border-radius: 20px;
+  color: white;
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="rgba(255,255,255,0.1)"/><circle cx="75" cy="75" r="1" fill="rgba(255,255,255,0.1)"/><circle cx="50" cy="10" r="0.5" fill="rgba(255,255,255,0.05)"/><circle cx="10" cy="60" r="0.5" fill="rgba(255,255,255,0.05)"/><circle cx="90" cy="40" r="0.5" fill="rgba(255,255,255,0.05)"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+    opacity: 0.3;
+    animation: float 20s ease-in-out infinite;
+  }
 `;
 
 const PageTitle = styled.h1`
-  font-size: 32px;
-  color: #333;
+  font-size: 36px;
+  color: white;
   margin-bottom: 8px;
   line-height: 1.3;
-  font-weight: 600;
+  font-weight: 700;
   text-align: right;
+  position: relative;
+  z-index: 1;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 `;
 
 const PageSubtitle = styled.p`
-  color: #666;
-  font-size: 16px;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 18px;
   line-height: 1.6;
   margin: 0;
   text-align: right;
+  position: relative;
+  z-index: 1;
 `;
 
 const PageActions = styled.div`
@@ -175,7 +196,7 @@ const Organizations: React.FC = () => {
     };
   }, [data.organizations, data.projects]);
 
-  const handleExport = (format: 'pdf' | 'excel', options?: any) => {
+  const handleExport = (format: 'pdf' | 'excel', options?: Record<string, unknown>) => {
     if (format === 'excel') {
       const success = exportOrganizationsToExcel(data.organizations);
       if (success) {
@@ -184,7 +205,12 @@ const Organizations: React.FC = () => {
         toast.error('حدث خطأ أثناء تصدير البيانات');
       }
     } else {
-      toast('تصدير PDF قيد التطوير', { icon: 'ℹ️' });
+      const success = exportOrganizationsToExcel(filteredData);
+      if (success) {
+        toast.success('تم تصدير البيانات بنجاح');
+      } else {
+        toast.error('حدث خطأ أثناء تصدير البيانات');
+      }
     }
   };
 
@@ -232,8 +258,24 @@ const Organizations: React.FC = () => {
   return (
     <PageContainer>
       <PageHeader>
-        <PageTitle>المؤسسات</PageTitle>
-        <PageSubtitle>إدارة المؤسسات الشريكة والمتعاونة</PageSubtitle>
+        <div className="flex items-center justify-between">
+          <div>
+            <PageTitle>
+              <i className="fas fa-building ml-3"></i>
+              المؤسسات
+            </PageTitle>
+            <PageSubtitle>إدارة المؤسسات الشريكة والمتعاونة</PageSubtitle>
+          </div>
+          <div className="flex items-center gap-4">
+            <div className="text-right">
+              <p className="text-sm text-white/80">إجمالي المؤسسات</p>
+              <p className="text-2xl font-bold text-white">{stats.total}</p>
+            </div>
+            <div className="w-16 h-16 bg-white/20  rounded-full flex items-center justify-center">
+              <i className="fas fa-university text-white text-2xl"></i>
+            </div>
+          </div>
+        </div>
       </PageHeader>
 
       {/* Statistics Cards */}

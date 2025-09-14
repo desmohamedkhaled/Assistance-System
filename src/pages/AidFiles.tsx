@@ -3,6 +3,7 @@ import { useApp } from '@/context/AppContext';
 import styled from 'styled-components';
 import { AidFile, TableColumn } from '@/types';
 import { formatDate, formatFileSize } from '@/utils/format';
+import { exportAidFilesToExcel } from '@/utils/export';
 import DataTable from '@/components/UI/Table';
 import Button from '@/components/UI/Button';
 import Modal from '@/components/UI/Modal';
@@ -232,8 +233,13 @@ const AidFiles: React.FC = () => {
     };
   }, [data.aidFiles]);
 
-  const handleExport = (format: 'pdf' | 'excel', options?: any) => {
-    toast('تصدير بيانات الملفات قيد التطوير', { icon: 'ℹ️' });
+  const handleExport = (format: 'pdf' | 'excel', options?: Record<string, unknown>) => {
+    const success = exportAidFilesToExcel(filteredData);
+    if (success) {
+      toast.success('تم تصدير البيانات بنجاح');
+    } else {
+      toast.error('حدث خطأ أثناء تصدير البيانات');
+    }
   };
 
   const handleRowClick = (file: AidFile) => {

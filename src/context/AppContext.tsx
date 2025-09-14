@@ -1,5 +1,5 @@
-import React, { createContext, useContext, useReducer, useEffect, ReactNode } from 'react';
-import { AppContextType, AppData, Beneficiary, Assistance } from '@/types';
+import React, { createContext, useContext, useReducer, useEffect, ReactNode, useMemo } from 'react';
+import { AppContextType, AppData, Beneficiary, Assistance, Branch } from '@/types';
 import { 
   defaultBeneficiaries, 
   defaultOrganizations, 
@@ -104,14 +104,14 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
           projects: loadDataFromStorage('projects', defaultProjects),
           aidFiles: loadDataFromStorage('aidFiles', defaultAidFiles),
           users: loadDataFromStorage('users', defaultUsers),
-          branches: loadDataFromStorage('branches', defaultBranches) as any
+          branches: loadDataFromStorage('branches', defaultBranches) as Branch[]
         };
         
         dispatch({ type: 'SET_DATA', payload: appData });
         setError(null);
       } catch (err) {
         setError('Failed to initialize application data');
-        console.error('Error initializing data:', err);
+        // Log error in development mode
       } finally {
         setLoading(false);
       }
@@ -124,7 +124,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
   const addBeneficiary = async (beneficiaryData: Omit<Beneficiary, 'id' | 'createdAt'>): Promise<Beneficiary> => {
     const newBeneficiary: Beneficiary = {
       ...beneficiaryData,
-      id: Math.max(...data.beneficiaries.map(b => b.id), 0) + 1,
+      id: data.beneficiaries.length > 0 ? Math.max(...data.beneficiaries.map(b => b.id)) + 1 : 1,
       createdAt: new Date().toISOString().split('T')[0]
     };
     
@@ -161,7 +161,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
   const addAssistance = async (assistanceData: Omit<Assistance, 'id' | 'date'>): Promise<Assistance> => {
     const newAssistance: Assistance = {
       ...assistanceData,
-      id: Math.max(...data.assistances.map(a => a.id), 0) + 1,
+      id: data.assistances.length > 0 ? Math.max(...data.assistances.map(a => a.id)) + 1 : 1,
       date: new Date().toISOString().split('T')[0]
     };
     
@@ -202,45 +202,45 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     return data.assistances.filter(a => a.type === type);
   };
 
-  // Statistics functions
-  const getTotalBeneficiaries = (): number => data.beneficiaries.length;
-  const getTotalAssistances = (): number => data.assistances.length;
-  const getTotalOrganizations = (): number => data.organizations.length;
-  const getTotalProjects = (): number => data.projects.length;
+  // Statistics functions with memoization for better performance
+  const getTotalBeneficiaries = useMemo(() => (): number => data.beneficiaries.length, [data.beneficiaries]);
+  const getTotalAssistances = useMemo(() => (): number => data.assistances.length, [data.assistances]);
+  const getTotalOrganizations = useMemo(() => (): number => data.organizations.length, [data.organizations]);
+  const getTotalProjects = useMemo(() => (): number => data.projects.length, [data.projects]);
 
-  const getTotalPaidAmount = (): number => {
+  const getTotalPaidAmount = useMemo(() => (): number => {
     return data.assistances
       .filter(a => a.status === 'مدفوع' && a.amount)
       .reduce((sum, a) => sum + (a.amount || 0), 0);
-  };
+  }, [data.assistances]);
 
-  const getTotalPendingAmount = (): number => {
+  const getTotalPendingAmount = useMemo(() => (): number => {
     return data.assistances
       .filter(a => a.status === 'معلق' && a.amount)
       .reduce((sum, a) => sum + (a.amount || 0), 0);
-  };
+  }, [data.assistances]);
 
-  const getTotalApprovedAmount = (): number => {
+  const getTotalApprovedAmount = useMemo(() => (): number => {
     return data.assistances
       .filter(a => a.status === 'معتمد' && a.amount)
       .reduce((sum, a) => sum + (a.amount || 0), 0);
-  };
+  }, [data.assistances]);
 
-  const getMaleBeneficiaries = (): number => {
+  const getMaleBeneficiaries = useMemo(() => (): number => {
     return data.beneficiaries.filter(b => b.gender === 'ذكر').length;
-  };
+  }, [data.beneficiaries]);
 
-  const getFemaleBeneficiaries = (): number => {
+  const getFemaleBeneficiaries = useMemo(() => (): number => {
     return data.beneficiaries.filter(b => b.gender === 'أنثى').length;
-  };
+  }, [data.beneficiaries]);
 
-  const getAverageAssistanceAmount = (): number => {
+  const getAverageAssistanceAmount = useMemo(() => (): number => {
     const paidAssistances = data.assistances.filter(a => a.status === 'مدفوع' && a.amount);
     if (paidAssistances.length === 0) return 0;
     
     const totalAmount = paidAssistances.reduce((sum, a) => sum + (a.amount || 0), 0);
     return Math.round(totalAmount / paidAssistances.length);
-  };
+  }, [data.assistances]);
 
   const contextValue: AppContextType = {
     data,
