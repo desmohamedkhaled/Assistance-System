@@ -5,8 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "npm run build:vite",
-    "build:vite": "node_modules/.bin/vite build",
+    "build": "npm exec vite build",
+    "build:vercel": "vite build",
     "preview": "vite preview",
     "lint": "eslint . --ext .ts,.tsx"
   },
