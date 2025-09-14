@@ -239,6 +239,7 @@ const DemoAccount = styled.div`
   font-size: 14px;
   line-height: 1.8;
   margin-bottom: 8px;
+
   display: flex;
   align-items: center;
   justify-content: space-between;
