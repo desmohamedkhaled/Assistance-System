@@ -2,18 +2,19 @@
 
 export interface Beneficiary {
   id: number;
+  fullName: string; // الاسم بالكامل
   firstName: string;
   secondName: string;
   thirdName: string;
   lastName: string;
-  nationalId: string;
-  phone: string;
+  nationalId: string; // الرقم القومي - مفتاح أساسي
+  phone: string; // رقم الهاتف
   address: string;
-  gender: 'ذكر' | 'أنثى';
-  religion: 'مسلم' | 'مسلمة' | 'مسيحي' | 'مسيحية' | 'أخرى';
-  maritalStatus: 'عازب' | 'عزباء' | 'متزوج' | 'متزوجة' | 'مطلق' | 'مطلقة' | 'أرمل' | 'أرملة';
-  familyMembers: number;
-  income: number;
+  gender: 'ذكر' | 'أنثى'; // النوع
+  religion: 'مسلم' | 'مسلمة' | 'مسيحي' | 'مسيحية' | 'أخرى'; // الديانة
+  maritalStatus: 'عازب' | 'عزباء' | 'متزوج' | 'متزوجة' | 'مطلق' | 'مطلقة' | 'أرمل' | 'أرملة'; // الحالة الاجتماعية
+  familyMembers: number; // عدد أفراد الأسرة
+  income: number; // الدخل الشهري
   createdAt: string;
 }
 
@@ -47,12 +48,15 @@ export interface Project {
 export interface Assistance {
   id: number;
   beneficiaryId: number;
-  type: 'طبية' | 'أيتام' | 'أرامل' | 'ذوي الاحتياجات' | 'تعليمية' | 'أسر السجناء' | 'مالية';
-  amount: number;
-  paymentMethod: 'تحويل بنكي' | 'نقدي' | 'حساب داخلي' | 'فيزا';
+  type: 'مالية' | 'علاجية' | 'تعليمية' | 'طبية' | 'أيتام' | 'أرامل' | 'ذوي الاحتياجات' | 'أسر السجناء'; // نوع المساعدة
+  amount: number; // المبلغ المطلوب
+  paymentMethod: 'نقدي' | 'تحويل بنكي' | 'شيك' | 'حساب داخلي' | 'فيزا'; // طريقة الصرف
   status: 'معلق' | 'قيد المراجعة' | 'معتمد' | 'مدفوع' | 'مرفوض';
   date: string;
-  notes: string;
+  notes: string; // ملاحظات إضافية
+  // المرفقات
+  nationalIdImage?: string; // صورة بطاقة الرقم القومي
+  supportingDocument?: string; // مستند داعم
 }
 
 export interface AidFile {

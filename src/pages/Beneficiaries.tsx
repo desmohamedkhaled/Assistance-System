@@ -154,6 +154,23 @@ const Beneficiaries: React.FC = () => {
   const [showDetailsModal, setShowDetailsModal] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [formData, setFormData] = useState({
+    fullName: '',
+    firstName: '',
+    secondName: '',
+    thirdName: '',
+    lastName: '',
+    nationalId: '',
+    phone: '',
+    address: '',
+    gender: '',
+    religion: '',
+    maritalStatus: '',
+    familyMembers: '',
+    income: ''
+  });
+  const [errors, setErrors] = useState<{[key: string]: string}>({});
 
   // Filter beneficiaries based on search term
   const filteredBeneficiaries = useMemo(() => {
@@ -197,6 +214,121 @@ const Beneficiaries: React.FC = () => {
   const handleEditBeneficiary = () => {
     setShowEditModal(true);
     setShowDetailsModal(false);
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+    
+    // Clear error when user starts typing
+    if (errors[name]) {
+      setErrors(prev => ({
+        ...prev,
+        [name]: ''
+      }));
+    }
+  };
+
+  const validateForm = (): boolean => {
+    const newErrors: {[key: string]: string} = {};
+
+    if (!formData.fullName.trim()) {
+      newErrors.fullName = 'الاسم بالكامل مطلوب';
+    }
+    if (!formData.nationalId.trim()) {
+      newErrors.nationalId = 'الرقم القومي مطلوب';
+    } else if (!/^\d{14}$/.test(formData.nationalId)) {
+      newErrors.nationalId = 'الرقم القومي يجب أن يكون 14 رقم';
+    }
+    if (!formData.phone.trim()) {
+      newErrors.phone = 'رقم الهاتف مطلوب';
+    } else if (!/^01[0-9]{9}$/.test(formData.phone)) {
+      newErrors.phone = 'رقم الهاتف غير صحيح';
+    }
+    if (!formData.gender) {
+      newErrors.gender = 'النوع مطلوب';
+    }
+    if (!formData.religion) {
+      newErrors.religion = 'الديانة مطلوبة';
+    }
+    if (!formData.maritalStatus) {
+      newErrors.maritalStatus = 'الحالة الاجتماعية مطلوبة';
+    }
+    if (!formData.familyMembers) {
+      newErrors.familyMembers = 'عدد أفراد الأسرة مطلوب';
+    } else if (parseInt(formData.familyMembers) < 1) {
+      newErrors.familyMembers = 'عدد أفراد الأسرة يجب أن يكون أكبر من صفر';
+    }
+    if (!formData.income) {
+      newErrors.income = 'الدخل الشهري مطلوب';
+    } else if (parseFloat(formData.income) < 0) {
+      newErrors.income = 'الدخل الشهري يجب أن يكون أكبر من أو يساوي صفر';
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!validateForm()) {
+      toast.error('يرجى تصحيح الأخطاء في النموذج');
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    try {
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      
+      toast.success('تم إضافة المستفيد بنجاح');
+      setShowAddModal(false);
+      
+      // Reset form
+      setFormData({
+        fullName: '',
+        firstName: '',
+        secondName: '',
+        thirdName: '',
+        lastName: '',
+        nationalId: '',
+        phone: '',
+        address: '',
+        gender: '',
+        religion: '',
+        maritalStatus: '',
+        familyMembers: '',
+        income: ''
+      });
+    } catch (error) {
+      toast.error('حدث خطأ أثناء إضافة المستفيد');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const resetForm = () => {
+    setFormData({
+      fullName: '',
+      firstName: '',
+      secondName: '',
+      thirdName: '',
+      lastName: '',
+      nationalId: '',
+      phone: '',
+      address: '',
+      gender: '',
+      religion: '',
+      maritalStatus: '',
+      familyMembers: '',
+      income: ''
+    });
+    setErrors({});
   };
 
   const columns: TableColumn<Beneficiary>[] = [
@@ -390,23 +522,371 @@ const Beneficiaries: React.FC = () => {
         title="إضافة مستفيد جديد"
         size="lg"
       >
-        <div style={{ padding: '20px' }}>
-          <p>نموذج إضافة مستفيد جديد - قيد التطوير</p>
+        <form onSubmit={handleSubmit} style={{ padding: '20px' }}>
+          <div style={{ 
+            display: 'grid', 
+            gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', 
+            gap: '20px',
+            marginBottom: '30px'
+          }}>
+            {/* Full Name */}
+            <div>
+              <label style={{ 
+                display: 'block', 
+                marginBottom: '8px', 
+                fontWeight: '600', 
+                color: '#333' 
+              }}>
+                <span style={{ color: '#dc3545', marginRight: '4px' }}>*</span>
+                الاسم بالكامل
+              </label>
+              <input
+                type="text"
+                name="fullName"
+                value={formData.fullName}
+                onChange={handleInputChange}
+                style={{
+                  width: '100%',
+                  padding: '12px 16px',
+                  border: `2px solid ${errors.fullName ? '#dc3545' : '#e9ecef'}`,
+                  borderRadius: '8px',
+                  fontSize: '14px',
+                  transition: 'border-color 0.3s ease',
+                  direction: 'rtl'
+                }}
+                placeholder="أدخل الاسم بالكامل"
+              />
+              {errors.fullName && (
+                <p style={{ color: '#dc3545', fontSize: '12px', marginTop: '4px' }}>
+                  {errors.fullName}
+                </p>
+              )}
+            </div>
+
+            {/* National ID */}
+            <div>
+              <label style={{ 
+                display: 'block', 
+                marginBottom: '8px', 
+                fontWeight: '600', 
+                color: '#333' 
+              }}>
+                <span style={{ color: '#dc3545', marginRight: '4px' }}>*</span>
+                الرقم القومي
+              </label>
+              <input
+                type="text"
+                name="nationalId"
+                value={formData.nationalId}
+                onChange={handleInputChange}
+                style={{
+                  width: '100%',
+                  padding: '12px 16px',
+                  border: `2px solid ${errors.nationalId ? '#dc3545' : '#e9ecef'}`,
+                  borderRadius: '8px',
+                  fontSize: '14px',
+                  transition: 'border-color 0.3s ease',
+                  direction: 'ltr'
+                }}
+                placeholder="14 رقم"
+                maxLength={14}
+              />
+              {errors.nationalId && (
+                <p style={{ color: '#dc3545', fontSize: '12px', marginTop: '4px' }}>
+                  {errors.nationalId}
+                </p>
+              )}
+            </div>
+
+            {/* Phone */}
+            <div>
+              <label style={{ 
+                display: 'block', 
+                marginBottom: '8px', 
+                fontWeight: '600', 
+                color: '#333' 
+              }}>
+                <span style={{ color: '#dc3545', marginRight: '4px' }}>*</span>
+                رقم الهاتف
+              </label>
+              <input
+                type="tel"
+                name="phone"
+                value={formData.phone}
+                onChange={handleInputChange}
+                style={{
+                  width: '100%',
+                  padding: '12px 16px',
+                  border: `2px solid ${errors.phone ? '#dc3545' : '#e9ecef'}`,
+                  borderRadius: '8px',
+                  fontSize: '14px',
+                  transition: 'border-color 0.3s ease',
+                  direction: 'ltr'
+                }}
+                placeholder="01xxxxxxxxx"
+              />
+              {errors.phone && (
+                <p style={{ color: '#dc3545', fontSize: '12px', marginTop: '4px' }}>
+                  {errors.phone}
+                </p>
+              )}
+            </div>
+
+            {/* Gender */}
+            <div>
+              <label style={{ 
+                display: 'block', 
+                marginBottom: '8px', 
+                fontWeight: '600', 
+                color: '#333' 
+              }}>
+                <span style={{ color: '#dc3545', marginRight: '4px' }}>*</span>
+                النوع
+              </label>
+              <select
+                name="gender"
+                value={formData.gender}
+                onChange={handleInputChange}
+                style={{
+                  width: '100%',
+                  padding: '12px 16px',
+                  border: `2px solid ${errors.gender ? '#dc3545' : '#e9ecef'}`,
+                  borderRadius: '8px',
+                  fontSize: '14px',
+                  transition: 'border-color 0.3s ease',
+                  direction: 'rtl'
+                }}
+              >
+                <option value="">اختر النوع</option>
+                <option value="ذكر">ذكر</option>
+                <option value="أنثى">أنثى</option>
+              </select>
+              {errors.gender && (
+                <p style={{ color: '#dc3545', fontSize: '12px', marginTop: '4px' }}>
+                  {errors.gender}
+                </p>
+              )}
+            </div>
+
+            {/* Religion */}
+            <div>
+              <label style={{ 
+                display: 'block', 
+                marginBottom: '8px', 
+                fontWeight: '600', 
+                color: '#333' 
+              }}>
+                <span style={{ color: '#dc3545', marginRight: '4px' }}>*</span>
+                الديانة
+              </label>
+              <select
+                name="religion"
+                value={formData.religion}
+                onChange={handleInputChange}
+                style={{
+                  width: '100%',
+                  padding: '12px 16px',
+                  border: `2px solid ${errors.religion ? '#dc3545' : '#e9ecef'}`,
+                  borderRadius: '8px',
+                  fontSize: '14px',
+                  transition: 'border-color 0.3s ease',
+                  direction: 'rtl'
+                }}
+              >
+                <option value="">اختر الديانة</option>
+                <option value="مسلم">مسلم</option>
+                <option value="مسلمة">مسلمة</option>
+                <option value="مسيحي">مسيحي</option>
+                <option value="مسيحية">مسيحية</option>
+                <option value="أخرى">أخرى</option>
+              </select>
+              {errors.religion && (
+                <p style={{ color: '#dc3545', fontSize: '12px', marginTop: '4px' }}>
+                  {errors.religion}
+                </p>
+              )}
+            </div>
+
+            {/* Marital Status */}
+            <div>
+              <label style={{ 
+                display: 'block', 
+                marginBottom: '8px', 
+                fontWeight: '600', 
+                color: '#333' 
+              }}>
+                <span style={{ color: '#dc3545', marginRight: '4px' }}>*</span>
+                الحالة الاجتماعية
+              </label>
+              <select
+                name="maritalStatus"
+                value={formData.maritalStatus}
+                onChange={handleInputChange}
+                style={{
+                  width: '100%',
+                  padding: '12px 16px',
+                  border: `2px solid ${errors.maritalStatus ? '#dc3545' : '#e9ecef'}`,
+                  borderRadius: '8px',
+                  fontSize: '14px',
+                  transition: 'border-color 0.3s ease',
+                  direction: 'rtl'
+                }}
+              >
+                <option value="">اختر الحالة الاجتماعية</option>
+                <option value="عازب">عازب</option>
+                <option value="عزباء">عزباء</option>
+                <option value="متزوج">متزوج</option>
+                <option value="متزوجة">متزوجة</option>
+                <option value="مطلق">مطلق</option>
+                <option value="مطلقة">مطلقة</option>
+                <option value="أرمل">أرمل</option>
+                <option value="أرملة">أرملة</option>
+              </select>
+              {errors.maritalStatus && (
+                <p style={{ color: '#dc3545', fontSize: '12px', marginTop: '4px' }}>
+                  {errors.maritalStatus}
+                </p>
+              )}
+            </div>
+
+            {/* Family Members */}
+            <div>
+              <label style={{ 
+                display: 'block', 
+                marginBottom: '8px', 
+                fontWeight: '600', 
+                color: '#333' 
+              }}>
+                <span style={{ color: '#dc3545', marginRight: '4px' }}>*</span>
+                عدد أفراد الأسرة
+              </label>
+              <input
+                type="number"
+                name="familyMembers"
+                value={formData.familyMembers}
+                onChange={handleInputChange}
+                style={{
+                  width: '100%',
+                  padding: '12px 16px',
+                  border: `2px solid ${errors.familyMembers ? '#dc3545' : '#e9ecef'}`,
+                  borderRadius: '8px',
+                  fontSize: '14px',
+                  transition: 'border-color 0.3s ease',
+                  direction: 'ltr'
+                }}
+                placeholder="عدد الأفراد"
+                min="1"
+              />
+              {errors.familyMembers && (
+                <p style={{ color: '#dc3545', fontSize: '12px', marginTop: '4px' }}>
+                  {errors.familyMembers}
+                </p>
+              )}
+            </div>
+
+            {/* Income */}
+            <div>
+              <label style={{ 
+                display: 'block', 
+                marginBottom: '8px', 
+                fontWeight: '600', 
+                color: '#333' 
+              }}>
+                <span style={{ color: '#dc3545', marginRight: '4px' }}>*</span>
+                الدخل الشهري (جنيه مصري)
+              </label>
+              <input
+                type="number"
+                name="income"
+                value={formData.income}
+                onChange={handleInputChange}
+                style={{
+                  width: '100%',
+                  padding: '12px 16px',
+                  border: `2px solid ${errors.income ? '#dc3545' : '#e9ecef'}`,
+                  borderRadius: '8px',
+                  fontSize: '14px',
+                  transition: 'border-color 0.3s ease',
+                  direction: 'ltr'
+                }}
+                placeholder="المبلغ الشهري"
+                min="0"
+                step="0.01"
+              />
+              {errors.income && (
+                <p style={{ color: '#dc3545', fontSize: '12px', marginTop: '4px' }}>
+                  {errors.income}
+                </p>
+              )}
+            </div>
+
+            {/* Address */}
+            <div style={{ gridColumn: '1 / -1' }}>
+              <label style={{ 
+                display: 'block', 
+                marginBottom: '8px', 
+                fontWeight: '600', 
+                color: '#333' 
+              }}>
+                العنوان
+              </label>
+              <textarea
+                name="address"
+                value={formData.address}
+                onChange={handleInputChange}
+                style={{
+                  width: '100%',
+                  padding: '12px 16px',
+                  border: '2px solid #e9ecef',
+                  borderRadius: '8px',
+                  fontSize: '14px',
+                  transition: 'border-color 0.3s ease',
+                  direction: 'rtl',
+                  minHeight: '80px',
+                  resize: 'vertical'
+                }}
+                placeholder="أدخل العنوان الكامل"
+              />
+            </div>
+          </div>
+
           <div style={{ 
             display: 'flex', 
             gap: '12px', 
             justifyContent: 'flex-end',
-            marginTop: '20px'
+            borderTop: '1px solid #eee',
+            paddingTop: '20px'
           }}>
-            <Button variant="secondary" onClick={() => setShowAddModal(false)}>
+            <Button 
+              type="button"
+              variant="secondary" 
+              onClick={() => {
+                setShowAddModal(false);
+                resetForm();
+              }}
+            >
+              <i className="fas fa-times"></i>
               إلغاء
             </Button>
-            <Button variant="primary">
+            <Button 
+              type="button"
+              variant="secondary" 
+              onClick={resetForm}
+            >
+              <i className="fas fa-undo"></i>
+              إعادة تعيين
+            </Button>
+            <Button 
+              type="submit"
+              variant="primary"
+              loading={isSubmitting}
+              disabled={isSubmitting}
+            >
               <i className="fas fa-save"></i>
-              حفظ
+              {isSubmitting ? 'جاري الحفظ...' : 'حفظ المستفيد'}
             </Button>
           </div>
-        </div>
+        </form>
       </Modal>
 
       {/* Edit Beneficiary Modal */}

@@ -239,6 +239,7 @@ const Assistances: React.FC = () => {
   const [typeFilter, setTypeFilter] = useState('');
   const [selectedAssistance, setSelectedAssistance] = useState<Assistance | null>(null);
   const [showDetailsModal, setShowDetailsModal] = useState(false);
+  const [showAddModal, setShowAddModal] = useState(false);
 
   // Filter assistances based on search term and filters
   const filteredAssistances = useMemo(() => {
@@ -309,6 +310,10 @@ const Assistances: React.FC = () => {
   const handleRowClick = (assistance: Assistance) => {
     setSelectedAssistance(assistance);
     setShowDetailsModal(true);
+  };
+
+  const handleAddAssistance = () => {
+    setShowAddModal(true);
   };
 
   const columns: TableColumn<Assistance>[] = [
@@ -455,7 +460,7 @@ const Assistances: React.FC = () => {
           </FilterSelect>
         </FiltersContainer>
         <div className="flex gap-3">
-          <Button variant="primary">
+          <Button variant="primary" onClick={handleAddAssistance}>
             <i className="fas fa-plus"></i>
             إضافة مساعدة
           </Button>
@@ -550,6 +555,45 @@ const Assistances: React.FC = () => {
             </div>
           </div>
         )}
+      </Modal>
+
+      {/* Add Assistance Modal */}
+      <Modal
+        isOpen={showAddModal}
+        onClose={() => setShowAddModal(false)}
+        title="إضافة مساعدة جديدة"
+        size="lg"
+      >
+        <div style={{ padding: '20px', textAlign: 'center' }}>
+          <div style={{ fontSize: '64px', color: '#28a745', marginBottom: '20px' }}>
+            <i className="fas fa-hand-holding-heart"></i>
+          </div>
+          <h3 style={{ color: '#333', marginBottom: '15px' }}>
+            إضافة مساعدة جديدة
+          </h3>
+          <p style={{ color: '#666', marginBottom: '25px', lineHeight: '1.6' }}>
+            لإنشاء مساعدة جديدة، يرجى استخدام نموذج "طلب مساعدة" المخصص لهذا الغرض.
+          </p>
+          <div style={{ display: 'flex', gap: '12px', justifyContent: 'center' }}>
+            <Button
+              variant="secondary"
+              onClick={() => setShowAddModal(false)}
+            >
+              <i className="fas fa-times"></i>
+              إلغاء
+            </Button>
+            <Button
+              variant="primary"
+              onClick={() => {
+                setShowAddModal(false);
+                window.location.href = '/request-assistance';
+              }}
+            >
+              <i className="fas fa-arrow-left"></i>
+              الذهاب لطلب المساعدة
+            </Button>
+          </div>
+        </div>
       </Modal>
     </PageContainer>
   );
