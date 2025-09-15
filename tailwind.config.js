@@ -115,29 +115,78 @@ export default {
   theme: {
     extend: {
       colors: {
+        // Custom color palette
+        'geyser': '#d3e0e5',
+        'smalt-blue': '#547c8c',
+        'pickled-bluewood': '#2c4354',
+        'gumbo': '#79959e',
+        'cod-gray': '#0c0c0c',
+        'cutty-sark': '#5c767e',
+        'fiord': '#3d5260',
+        'cod-gray-light': '#141414',
+        'jumbo': '#8c8c90',
+        'limed-spruce': '#303c44',
+        
+        // Primary colors using your palette
         primary: {
-          50: '#f0f4ff',
-          100: '#e0e7ff',
-          200: '#c7d2fe',
-          300: '#a5b4fc',
-          400: '#818cf8',
-          500: '#667eea',
-          600: '#5a6fd8',
-          700: '#4c51bf',
-          800: '#4338ca',
-          900: '#3730a3',
+          50: '#f0f4f7',
+          100: '#e1e9ef',
+          200: '#c3d3df',
+          300: '#a5bdcf',
+          400: '#87a7bf',
+          500: '#547c8c', // smalt-blue
+          600: '#4a6b7a',
+          700: '#3d5260', // fiord
+          800: '#2c4354', // pickled-bluewood
+          900: '#1b2a35',
         },
         secondary: {
-          50: '#f8fafc',
-          100: '#f1f5f9',
-          200: '#e2e8f0',
-          300: '#cbd5e1',
-          400: '#94a3b8',
-          500: '#64748b',
-          600: '#475569',
-          700: '#334155',
-          800: '#1e293b',
-          900: '#0f172a',
+          50: '#f5f6f7',
+          100: '#ebeced',
+          200: '#d7d9db',
+          300: '#c3c6c9',
+          400: '#afb3b7',
+          500: '#8c8c90', // jumbo
+          600: '#7e7e82',
+          700: '#5c767e', // cutty-sark
+          800: '#303c44', // limed-spruce
+          900: '#1e2529',
+        },
+        accent: {
+          50: '#f0f2f3',
+          100: '#e1e5e7',
+          200: '#c3cbcf',
+          300: '#a5b1b7',
+          400: '#87979f',
+          500: '#79959e', // gumbo
+          600: '#6d868e',
+          700: '#547c8c', // smalt-blue
+          800: '#3d5260', // fiord
+          900: '#242c33',
+        },
+        neutral: {
+          50: '#f8f8f8',
+          100: '#f1f1f1',
+          200: '#e3e3e3',
+          300: '#d5d5d5',
+          400: '#c7c7c7',
+          500: '#8c8c90', // jumbo
+          600: '#7e7e82',
+          700: '#5c767e', // cutty-sark
+          800: '#303c44', // limed-spruce
+          900: '#141414', // cod-gray-light
+        },
+        dark: {
+          50: '#2a2a2a',
+          100: '#1f1f1f',
+          200: '#141414', // cod-gray-light
+          300: '#0f0f0f',
+          400: '#0a0a0a',
+          500: '#0c0c0c', // cod-gray
+          600: '#080808',
+          700: '#060606',
+          800: '#040404',
+          900: '#020202',
         },
         success: {
           50: '#f0fdf4',

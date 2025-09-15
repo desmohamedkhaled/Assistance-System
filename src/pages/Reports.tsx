@@ -70,14 +70,14 @@ const ReportCard = styled.div`
   background: white;
   border-radius: 24px;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
-  border: 1px solid rgba(102, 126, 234, 0.1);
+  border: 1px solid rgba(84, 124, 140, 0.1);
   overflow: hidden;
   transition: all 0.4s ease;
   position: relative;
 
   &:hover {
     transform: translateY(-8px);
-    box-shadow: 0 20px 60px rgba(102, 126, 234, 0.2);
+    box-shadow: 0 20px 60px rgba(84, 124, 140, 0.2);
   }
 
   &::before {
@@ -87,13 +87,13 @@ const ReportCard = styled.div`
     left: 0;
     right: 0;
     height: 6px;
-    background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(90deg, #547c8c 0%, #3d5260 100%);
   }
 `;
 
 const ReportHeader = styled.div`
   padding: 32px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #547c8c 0%, #3d5260 100%);
   color: white;
   text-align: center;
   position: relative;

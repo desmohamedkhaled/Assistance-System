@@ -325,7 +325,7 @@ const Dashboard: React.FC = () => {
           <div className="mb-8 animate-fade-in-up">
             <div className="flex flex-col sm:flex-row items-center sm:items-center justify-between mb-8 gap-4">
               <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-800 flex items-center gap-4 text-center sm:text-right">
-                <div className="w-16 h-16 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-3xl flex items-center justify-center shadow-xl animate-float">
+                <div className="w-16 h-16 bg-gradient-to-br from-primary-500 to-accent-600 rounded-3xl flex items-center justify-center shadow-xl animate-float">
                   <i className="fas fa-chart-bar text-white text-2xl"></i>
                 </div>
                 الإحصائيات الرئيسية
@@ -339,16 +339,16 @@ const Dashboard: React.FC = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 3xl:grid-cols-6 gap-6">
               {stats.map((stat, index) => {
                 const colors = [
-                  'from-blue-500 to-blue-600',
-                  'from-emerald-500 to-emerald-600', 
-                  'from-purple-500 to-purple-600',
-                  'from-orange-500 to-orange-600',
-                  'from-red-500 to-red-600',
-                  'from-teal-500 to-teal-600',
-                  'from-indigo-500 to-indigo-600',
-                  'from-pink-500 to-pink-600',
-                  'from-amber-500 to-amber-600',
-                  'from-cyan-500 to-cyan-600'
+                  'from-smalt-blue to-fiord',
+                  'from-gumbo to-cutty-sark',
+                  'from-jumbo to-limed-spruce',
+                  'from-geyser to-smalt-blue',
+                  'from-pickled-bluewood to-fiord',
+                  'from-cutty-sark to-gumbo',
+                  'from-primary-500 to-primary-600',
+                  'from-accent-500 to-accent-600',
+                  'from-secondary-500 to-secondary-600',
+                  'from-neutral-500 to-neutral-600'
                 ];
                 const icons = [
                   'fa-users', 'fa-hand-holding-heart', 'fa-chart-bar', 'fa-money-bill-wave',
@@ -359,7 +359,7 @@ const Dashboard: React.FC = () => {
                 return (
                   <div 
                     key={index} 
-                    className="group relative bg-white rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-500 cursor-pointer overflow-hidden border border-gray-100 hover:border-gray-200 animate-slide-in-up hover:scale-105 hover:-translate-y-2"
+                    className="group relative bg-white rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-500 cursor-pointer overflow-hidden border border-primary-100 hover:border-primary-200 animate-slide-in-up hover:scale-105 hover:-translate-y-2"
                     style={{ animationDelay: `${index * 0.1}s` }}
                     onClick={() => handleQuickAction(stat.path)}
                   >
@@ -371,7 +371,7 @@ const Dashboard: React.FC = () => {
                     <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 bg-gradient-to-r from-transparent via-white/20 to-transparent"></div>
                     
                     {/* Top Accent Border */}
-                    <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-gray-200 to-transparent group-hover:via-indigo-300 transition-colors duration-500"></div>
+                    <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-primary-200 to-transparent group-hover:via-primary-300 transition-colors duration-500"></div>
                     
                     <div className="relative p-6">
                       <div className="flex items-center justify-between mb-6">
@@ -402,7 +402,7 @@ const Dashboard: React.FC = () => {
                     </div>
                     
                     {/* Bottom Accent */}
-                    <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-gray-200 to-transparent group-hover:via-indigo-300 transition-colors duration-500"></div>
+                    <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-primary-200 to-transparent group-hover:via-primary-300 transition-colors duration-500"></div>
                   </div>
                 );
               })}
@@ -411,7 +411,7 @@ const Dashboard: React.FC = () => {
 
           {/* Enhanced Quick Actions */}
           <div className="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden mb-6 animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
-            <div className="bg-gradient-to-r from-amber-500 via-orange-500 to-red-500 p-6 relative overflow-hidden">
+            <div className="bg-gradient-to-r from-warning-500 via-warning-600 to-danger-500 p-6 relative overflow-hidden">
               <div className="absolute inset-0 bg-black/5"></div>
               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent animate-pulse"></div>
               <div className="relative z-10">
@@ -434,18 +434,18 @@ const Dashboard: React.FC = () => {
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
                 {quickActions.map((action, index) => {
                   const actionColors = [
-                    'from-blue-500 to-blue-600',
-                    'from-emerald-500 to-emerald-600',
-                    'from-purple-500 to-purple-600',
-                    'from-orange-500 to-orange-600',
-                    'from-red-500 to-red-600',
-                    'from-teal-500 to-teal-600'
+                    'from-primary-500 to-primary-600',
+                    'from-accent-500 to-accent-600',
+                    'from-secondary-500 to-secondary-600',
+                    'from-neutral-500 to-neutral-600',
+                    'from-smalt-blue to-fiord',
+                    'from-gumbo to-cutty-sark'
                   ];
                   
                   return (
                     <button
                       key={index}
-                      className="group relative overflow-hidden bg-gradient-to-br hover:shadow-xl transition-all duration-500 hover:scale-105 rounded-2xl border border-gray-100 hover:border-gray-200 shadow-lg hover:shadow-xl hover:-translate-y-1"
+                      className="group relative overflow-hidden bg-gradient-to-br hover:shadow-xl transition-all duration-500 hover:scale-105 rounded-2xl border border-primary-100 hover:border-primary-200 shadow-lg hover:shadow-xl hover:-translate-y-1"
                       style={{ 
                         background: `linear-gradient(135deg, ${actionColors[index % actionColors.length].split(' ')[1]}, ${actionColors[index % actionColors.length].split(' ')[3]})`
                       }}
@@ -457,20 +457,20 @@ const Dashboard: React.FC = () => {
                       {/* Top Accent */}
                       <div className="absolute top-0 left-0 right-0 h-1 bg-white/20 group-hover:bg-white/30 transition-colors duration-300"></div>
                       
-                      <div className="relative z-10 flex flex-col items-center p-6 text-white">
-                        <div className="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 group-hover:rotate-6 transition-all duration-300 shadow-lg relative overflow-hidden">
-                          <div className="absolute inset-0 bg-gradient-to-br from-white/20 to-transparent"></div>
-                          <i className={`${action.icon} text-2xl relative z-10`}></i>
+                      <div className="relative z-10 flex flex-col items-center p-6 text-gray-900">
+                        <div className="w-16 h-16 bg-gray-100 backdrop-blur-sm rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 group-hover:rotate-6 transition-all duration-300 shadow-lg relative overflow-hidden">
+                          <div className="absolute inset-0 bg-gradient-to-br from-gray-200 to-transparent"></div>
+                          <i className={`${action.icon} text-2xl relative z-10 text-gray-700`}></i>
                         </div>
                         <span className="text-center leading-relaxed font-semibold text-base mb-3 group-hover:scale-105 transition-transform duration-300">{action.label}</span>
-                        <div className="flex items-center gap-2 text-white/80 text-xs group-hover:text-white transition-colors duration-300 bg-white/10 backdrop-blur-sm px-3 py-2 rounded-lg group-hover:bg-white/20">
+                        <div className="flex items-center gap-2 text-gray-600 text-xs group-hover:text-gray-800 transition-colors duration-300 bg-gray-100 backdrop-blur-sm px-3 py-2 rounded-lg group-hover:bg-gray-200">
                           <i className="fas fa-arrow-left group-hover:translate-x-1 transition-transform duration-300"></i>
                           <span className="font-medium">انقر للانتقال</span>
                         </div>
                       </div>
                       
-                      <div className="absolute top-4 right-4 w-8 h-8 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 group-hover:scale-110">
-                        <i className="fas fa-external-link-alt text-xs"></i>
+                      <div className="absolute top-4 right-4 w-8 h-8 bg-gray-200 backdrop-blur-sm rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 group-hover:scale-110">
+                        <i className="fas fa-external-link-alt text-xs text-gray-600"></i>
                       </div>
                       
                       {/* Bottom Accent */}
@@ -485,7 +485,7 @@ const Dashboard: React.FC = () => {
           {/* Enhanced Charts Section - Only for non-beneficiaries */}
           {!isBeneficiary && (
             <div className="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden mb-6 animate-fade-in-up" style={{ animationDelay: '0.4s' }}>
-              <div className="bg-gradient-to-r from-teal-500 via-cyan-500 to-blue-500 p-6 relative overflow-hidden">
+              <div className="bg-gradient-to-r from-info-500 via-accent-500 to-primary-500 p-6 relative overflow-hidden">
                 <div className="absolute inset-0 bg-black/5"></div>
                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent animate-pulse"></div>
                 <div className="relative z-10">
@@ -523,35 +523,35 @@ const Dashboard: React.FC = () => {
                     <AssistanceTypeChart type="bar" />
                   </div>
                   
-                  <div className="bg-gradient-to-br from-white to-emerald-50 p-6 rounded-2xl border border-emerald-100 hover:shadow-xl transition-all duration-500 hover:scale-105 group relative overflow-hidden">
-                    <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-emerald-500 to-emerald-600 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></div>
+                  <div className="bg-gradient-to-br from-white to-accent-50 p-6 rounded-2xl border border-accent-100 hover:shadow-xl transition-all duration-500 hover:scale-105 group relative overflow-hidden">
+                    <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-accent-500 to-accent-600 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></div>
                     <div className="flex items-center gap-3 mb-4">
-                      <div className="w-8 h-8 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                      <div className="w-8 h-8 bg-gradient-to-br from-accent-500 to-accent-600 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
                         <i className="fas fa-chart-line text-white text-sm"></i>
                       </div>
-                      <h3 className="text-base font-bold text-gray-800 group-hover:text-emerald-600 transition-colors duration-300">المساعدات الشهرية</h3>
+                      <h3 className="text-base font-bold text-gray-800 group-hover:text-accent-600 transition-colors duration-300">المساعدات الشهرية</h3>
                     </div>
                     <MonthlyAssistanceChart />
                   </div>
                   
-                  <div className="bg-gradient-to-br from-white to-purple-50 p-6 rounded-2xl border border-purple-100 hover:shadow-xl transition-all duration-500 hover:scale-105 group relative overflow-hidden">
-                    <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-purple-500 to-purple-600 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></div>
+                  <div className="bg-gradient-to-br from-white to-secondary-50 p-6 rounded-2xl border border-secondary-100 hover:shadow-xl transition-all duration-500 hover:scale-105 group relative overflow-hidden">
+                    <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-secondary-500 to-secondary-600 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></div>
                     <div className="flex items-center gap-3 mb-4">
-                      <div className="w-8 h-8 bg-gradient-to-br from-purple-500 to-purple-600 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                      <div className="w-8 h-8 bg-gradient-to-br from-secondary-500 to-secondary-600 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
                         <i className="fas fa-chart-pie text-white text-sm"></i>
                       </div>
-                      <h3 className="text-base font-bold text-gray-800 group-hover:text-purple-600 transition-colors duration-300">توزيع أنواع المساعدات</h3>
+                      <h3 className="text-base font-bold text-gray-800 group-hover:text-secondary-600 transition-colors duration-300">توزيع أنواع المساعدات</h3>
                     </div>
                     <AssistanceTypeChart type="doughnut" />
                   </div>
                   
-                  <div className="bg-gradient-to-br from-white to-orange-50 p-6 rounded-2xl border border-orange-100 hover:shadow-xl transition-all duration-500 hover:scale-105 group relative overflow-hidden">
-                    <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-orange-500 to-orange-600 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></div>
+                  <div className="bg-gradient-to-br from-white to-warning-50 p-6 rounded-2xl border border-warning-100 hover:shadow-xl transition-all duration-500 hover:scale-105 group relative overflow-hidden">
+                    <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-warning-500 to-warning-600 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></div>
                     <div className="flex items-center gap-3 mb-4">
-                      <div className="w-8 h-8 bg-gradient-to-br from-orange-500 to-orange-600 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                      <div className="w-8 h-8 bg-gradient-to-br from-warning-500 to-warning-600 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
                         <i className="fas fa-chart-area text-white text-sm"></i>
                       </div>
-                      <h3 className="text-base font-bold text-gray-800 group-hover:text-orange-600 transition-colors duration-300">توزيع الحالات</h3>
+                      <h3 className="text-base font-bold text-gray-800 group-hover:text-warning-600 transition-colors duration-300">توزيع الحالات</h3>
                     </div>
                     <StatusDistributionChart type="pie" />
                   </div>

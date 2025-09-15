@@ -44,10 +44,10 @@ const Card: React.FC<CardProps> = ({
 }) => {
   // Variant classes
   const variantClasses = {
-    default: 'bg-white border border-gray-200 shadow-sm',
-    elevated: 'bg-white border border-gray-200 shadow-lg',
-    outlined: 'bg-white border-2 border-gray-300 shadow-none',
-    glass: 'bg-white/80  border border-white/20 shadow-lg'
+    default: 'bg-white border border-primary-100 shadow-sm',
+    elevated: 'bg-white border border-primary-200 shadow-lg',
+    outlined: 'bg-white border-2 border-primary-300 shadow-none',
+    glass: 'bg-white/80 backdrop-blur-sm border border-primary-200/50 shadow-lg'
   };
 
   // Padding classes
@@ -76,8 +76,8 @@ const Card: React.FC<CardProps> = ({
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.3 }}
       >
-        <div className="absolute inset-0 bg-white/80  flex items-center justify-center z-10">
-          <div className="w-8 h-8 border-4 border-gray-200 border-t-primary-500 rounded-full animate-spin" />
+        <div className="absolute inset-0 bg-white/80 backdrop-blur-sm flex items-center justify-center z-10">
+          <div className="w-8 h-8 border-4 border-primary-200 border-t-primary-500 rounded-full animate-spin" />
         </div>
         {children}
       </motion.div>
@@ -100,7 +100,7 @@ const Card: React.FC<CardProps> = ({
       {/* Header */}
       {header && (
         <motion.div 
-          className="border-b border-gray-200 pb-4 mb-6"
+          className="border-b border-primary-100 pb-4 mb-6"
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
@@ -121,7 +121,7 @@ const Card: React.FC<CardProps> = ({
       {/* Footer */}
       {footer && (
         <motion.div 
-          className="border-t border-gray-200 pt-4 mt-6"
+          className="border-t border-primary-100 pt-4 mt-6"
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}

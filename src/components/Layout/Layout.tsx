@@ -30,7 +30,7 @@ const Layout: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+    <div className="min-h-screen bg-gradient-to-br from-geyser to-primary-50">
       {/* Sidebar Component */}
       <Sidebar isOpen={sidebarOpen} onClose={closeSidebar} />
       

@@ -130,7 +130,7 @@ const SearchIcon = styled.i`
   right: 16px;
   top: 50%;
   transform: translateY(-50%);
-  color: #ffc107;
+  color: #547c8c;
   font-size: 16px;
 `;
 
@@ -140,7 +140,7 @@ const ContentSection = styled.div`
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
   overflow: hidden;
   margin-bottom: 24px;
-  border: 1px solid rgba(255, 193, 7, 0.1);
+  border: 1px solid rgba(84, 124, 140, 0.1);
   position: relative;
 
   &::before {
@@ -150,7 +150,7 @@ const ContentSection = styled.div`
     left: 0;
     right: 0;
     height: 4px;
-    background: linear-gradient(90deg, #ffc107 0%, #fd7e14 100%);
+    background: linear-gradient(90deg, #547c8c 0%, #3d5260 100%);
   }
 `;
 
@@ -187,7 +187,7 @@ const StatCard = styled.div`
   padding: 24px;
   border-radius: 16px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-  border: 1px solid rgba(255, 193, 7, 0.1);
+  border: 1px solid rgba(84, 124, 140, 0.1);
   text-align: center;
   transition: all 0.3s ease;
   position: relative;
@@ -195,7 +195,7 @@ const StatCard = styled.div`
 
   &:hover {
     transform: translateY(-4px);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+    box-shadow: 0 8px 32px rgba(84, 124, 140, 0.15);
   }
 
   &::before {
@@ -205,7 +205,7 @@ const StatCard = styled.div`
     left: 0;
     right: 0;
     height: 3px;
-    background: linear-gradient(90deg, #ffc107 0%, #fd7e14 100%);
+    background: linear-gradient(90deg, #547c8c 0%, #3d5260 100%);
   }
 `;
 
