@@ -140,10 +140,23 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
         {/* Sidebar Header */}
         <div className="p-6 border-b border-white/10 bg-white/5 ">
           <div className="flex justify-between items-center">
-            <h2 className="text-lg font-semibold flex items-center gap-3">
-              <i className="fas fa-hands-helping text-warning-300 text-xl"></i>
-              نظام إدارة المساعدات
-            </h2>
+            <div className="flex items-center gap-3">
+              {/* Logo */}
+              <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center border border-white/30">
+                <img 
+                  src="/NSB.png" 
+                  alt="لوجو NSB" 
+                  className="w-6 h-6 rounded-lg object-contain"
+                  onError={(e) => {
+                    e.currentTarget.style.display = 'none';
+                  }}
+                />
+              </div>
+              <h2 className="text-lg font-semibold flex items-center gap-3">
+                <i className="fas fa-hands-helping text-warning-300 text-xl"></i>
+                نظام إدارة المساعدات
+              </h2>
+            </div>
             <button
               onClick={onClose}
               className="p-2 rounded-full text-white hover:bg-white/10 transition-all duration-300 hover:scale-110 hover:rotate-90 active:scale-95 focus:outline-none focus:ring-2 focus:ring-white/20"

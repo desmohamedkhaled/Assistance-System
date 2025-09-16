@@ -56,8 +56,11 @@ const Header: React.FC<HeaderProps> = ({ onMenuClick }) => {
               <div className="w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-br from-primary-500 to-primary-600 rounded-2xl flex items-center justify-center border-2 border-primary-200 shadow-xl animate-float">
                 <img 
                   src="/NSB.png" 
-                  alt="لوجو النظام" 
-                  className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl object-cover"
+                  alt="لوجو NSB" 
+                  className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl object-contain"
+                  onError={(e) => {
+                    e.currentTarget.style.display = 'none';
+                  }}
                 />
               </div>
               
