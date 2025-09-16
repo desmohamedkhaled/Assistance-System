@@ -174,7 +174,7 @@ const ActionButtons = styled.div`
 `;
 
 const AdminRequests: React.FC = () => {
-  const { data, loading } = useApp();
+  const { data, loading, updateAssistance } = useApp();
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('');
   const [typeFilter, setTypeFilter] = useState('');
@@ -235,8 +235,8 @@ const AdminRequests: React.FC = () => {
     };
   }, [data.assistances]);
 
-  const handleExport = (format: 'pdf' | 'excel', options?: Record<string, unknown>) => {
-    const success = exportAdminRequestsToExcel(filteredData);
+  const handleExport = (_format: 'pdf' | 'excel', _options?: Record<string, unknown>) => {
+    const success = exportAdminRequestsToExcel(filteredRequests);
     if (success) {
       toast.success('تم تصدير البيانات بنجاح');
     } else {
@@ -254,23 +254,40 @@ const AdminRequests: React.FC = () => {
     setShowActionModal(true);
   };
 
-  const confirmAction = () => {
+  const confirmAction = async () => {
     if (selectedRequest) {
-      let message = '';
-      switch (actionType) {
-        case 'approve':
-          message = 'تم اعتماد الطلب بنجاح';
-          break;
-        case 'reject':
-          message = 'تم رفض الطلب';
-          break;
-        case 'pay':
-          message = 'تم تسجيل الدفع بنجاح';
-          break;
+      try {
+        let newStatus: Assistance['status'];
+        let message = '';
+        
+        switch (actionType) {
+          case 'approve':
+            newStatus = 'معتمد';
+            message = 'تم اعتماد الطلب بنجاح';
+            break;
+          case 'reject':
+            newStatus = 'مرفوض';
+            message = 'تم رفض الطلب';
+            break;
+          case 'pay':
+            newStatus = 'مدفوع';
+            message = 'تم تسجيل الدفع بنجاح';
+            break;
+          default:
+            return;
+        }
+
+        // Update the assistance status in the database
+        await updateAssistance(selectedRequest.id, { status: newStatus });
+        
+        toast.success(message);
+        setShowActionModal(false);
+        setShowDetailsModal(false);
+        setSelectedRequest(null);
+      } catch (error) {
+        console.error('Error updating assistance:', error);
+        toast.error('حدث خطأ أثناء تحديث الطلب');
       }
-      toast.success(message);
-      setShowActionModal(false);
-      setShowDetailsModal(false);
     }
   };
 
@@ -309,7 +326,7 @@ const AdminRequests: React.FC = () => {
     {
       key: 'id',
       label: 'الإجراءات',
-      render: (value, item) => (
+      render: (_value, item) => (
         <ActionButtons>
           {item.status === 'معلق' && (
             <>

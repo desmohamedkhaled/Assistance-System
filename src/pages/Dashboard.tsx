@@ -241,65 +241,66 @@ const Dashboard: React.FC = () => {
         
         <div className="max-w-full mx-auto px-4 sm:px-6 lg:px-8 xl:px-10 py-6 relative z-10">
           {/* Enhanced Hero Section */}
-          <div className="relative overflow-hidden bg-gradient-to-br from-indigo-600 via-purple-600 to-blue-700 rounded-3xl mb-8 shadow-3xl border border-white/20 transform hover:scale-[1.01] transition-all duration-700 group">
+          <div className="relative overflow-hidden bg-gradient-to-br from-emerald-500 via-teal-600 to-cyan-700 rounded-3xl mb-8 shadow-2xl border border-white/30 transform hover:scale-[1.02] transition-all duration-700 group backdrop-blur-sm">
             {/* Animated Background Elements */}
             <div className="absolute inset-0">
               <div className="absolute top-0 left-0 w-full h-full">
-                <div className="absolute top-10 left-10 w-20 h-20 bg-white/10 rounded-full animate-pulse"></div>
-                <div className="absolute top-32 right-20 w-16 h-16 bg-white/5 rounded-full animate-pulse delay-1000"></div>
-                <div className="absolute bottom-20 left-32 w-12 h-12 bg-white/10 rounded-full animate-pulse delay-2000"></div>
-                <div className="absolute bottom-32 right-10 w-24 h-24 bg-white/5 rounded-full animate-pulse delay-3000"></div>
-                <div className="absolute top-1/2 left-1/4 w-8 h-8 bg-white/5 rounded-full animate-pulse delay-500"></div>
-                <div className="absolute top-1/3 right-1/3 w-14 h-14 bg-white/8 rounded-full animate-pulse delay-1500"></div>
+                <div className="absolute top-10 left-10 w-20 h-20 bg-white/15 rounded-full animate-pulse shadow-lg"></div>
+                <div className="absolute top-32 right-20 w-16 h-16 bg-white/10 rounded-full animate-pulse delay-1000 shadow-md"></div>
+                <div className="absolute bottom-20 left-32 w-12 h-12 bg-white/15 rounded-full animate-pulse delay-2000 shadow-lg"></div>
+                <div className="absolute bottom-32 right-10 w-24 h-24 bg-white/8 rounded-full animate-pulse delay-3000 shadow-md"></div>
+                <div className="absolute top-1/2 left-1/4 w-8 h-8 bg-white/12 rounded-full animate-pulse delay-500 shadow-sm"></div>
+                <div className="absolute top-1/3 right-1/3 w-14 h-14 bg-white/12 rounded-full animate-pulse delay-1500 shadow-md"></div>
                 
                 {/* Floating geometric shapes */}
-                <div className="absolute top-20 right-1/4 w-6 h-6 bg-white/10 rotate-45 animate-float"></div>
-                <div className="absolute bottom-1/4 left-1/3 w-4 h-4 bg-white/5 rounded-full animate-float delay-1000"></div>
-                <div className="absolute top-1/4 right-1/5 w-8 h-8 bg-white/8 rounded-lg rotate-12 animate-float delay-2000"></div>
+                <div className="absolute top-20 right-1/4 w-6 h-6 bg-white/15 rotate-45 animate-float shadow-lg"></div>
+                <div className="absolute bottom-1/4 left-1/3 w-4 h-4 bg-white/10 rounded-full animate-float delay-1000 shadow-md"></div>
+                <div className="absolute top-1/4 right-1/5 w-8 h-8 bg-white/12 rounded-lg rotate-12 animate-float delay-2000 shadow-lg"></div>
               </div>
             </div>
             
             {/* Gradient Overlay */}
-            <div className="absolute inset-0 bg-gradient-to-r from-black/10 via-transparent to-black/5"></div>
+            <div className="absolute inset-0 bg-gradient-to-r from-black/5 via-transparent to-black/10"></div>
             
             {/* Shimmer Effect */}
-            <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 bg-gradient-to-r from-transparent via-white/10 to-transparent"></div>
+            <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 bg-gradient-to-r from-transparent via-white/20 to-transparent"></div>
             
-            <div className="relative z-10 p-8 md:p-12 lg:p-16">
-              <div className="flex flex-col lg:flex-row items-center justify-between gap-8">
+            <div className="relative z-10 p-6 md:p-10 lg:p-14 xl:p-16">
+              <div className="flex flex-col lg:flex-row items-center justify-between gap-8 lg:gap-12">
                 <div className="flex-1 text-white text-center lg:text-right">
-                  <div className="flex flex-col lg:flex-row items-center lg:items-start gap-6 mb-6">
-                    <div className="w-24 h-24 bg-white/20 backdrop-blur-sm rounded-3xl flex items-center justify-center shadow-xl border border-white/30 group-hover:scale-110 transition-transform duration-500">
-                      <i className="fas fa-tachometer-alt text-4xl text-white group-hover:rotate-12 transition-transform duration-500"></i>
+                  <div className="flex flex-col lg:flex-row items-center lg:items-start gap-8 mb-8">
+                    <div className="w-28 h-28 bg-white/25 backdrop-blur-md rounded-3xl flex items-center justify-center shadow-2xl border-2 border-white/40 group-hover:scale-110 group-hover:rotate-6 transition-all duration-500 relative overflow-hidden">
+                      <div className="absolute inset-0 bg-gradient-to-br from-white/20 to-transparent"></div>
+                      <i className="fas fa-tachometer-alt text-5xl text-white group-hover:rotate-12 transition-transform duration-500 relative z-10 drop-shadow-lg"></i>
                     </div>
-                    <div className="text-center lg:text-right">
-                      <h1 className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold mb-4 bg-gradient-to-r from-white via-blue-100 to-purple-100 bg-clip-text text-transparent animate-glow">
+                    <div className="text-center lg:text-right space-y-4">
+                      <h1 className="text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-black mb-2 bg-gradient-to-r from-white via-emerald-100 to-cyan-100 bg-clip-text text-transparent animate-glow leading-tight">
                         {isBeneficiary ? `مرحباً ${user?.fullName}` : 'لوحة التحكم'}
                       </h1>
-                      <p className="text-lg md:text-xl lg:text-2xl xl:text-3xl text-white/90 font-medium leading-relaxed">
+                      <p className="text-base md:text-lg lg:text-xl xl:text-2xl text-white/95 font-semibold leading-relaxed max-w-2xl">
                         {isBeneficiary ? 'نظرة عامة على طلباتك وحالة مساعداتك' : 'نظرة عامة على نظام إدارة المساعدات'}
                       </p>
                     </div>
                   </div>
                   
                   {!isBeneficiary && (
-                    <div className="flex flex-wrap gap-3 mt-6">
-                      <div className="flex items-center gap-3 bg-white/15 backdrop-blur-sm rounded-xl px-4 py-3 border border-white/20 shadow-lg hover:bg-white/20 transition-all duration-300 group">
-                        <div className="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                          <i className="fas fa-calendar-alt text-white text-sm"></i>
+                    <div className="flex flex-wrap gap-4 mt-8">
+                      <div className="flex items-center gap-4 bg-white/20 backdrop-blur-md rounded-2xl px-6 py-4 border-2 border-white/30 shadow-xl hover:bg-white/25 hover:scale-105 transition-all duration-300 group">
+                        <div className="w-10 h-10 bg-white/30 rounded-xl flex items-center justify-center group-hover:scale-110 group-hover:rotate-6 transition-all duration-300 shadow-lg">
+                          <i className="fas fa-calendar-alt text-white text-base"></i>
                         </div>
                         <div>
-                          <p className="text-xs text-white/70 font-medium">آخر تحديث</p>
-                          <p className="font-bold text-sm">{new Date().toLocaleDateString('ar-SA')}</p>
+                          <p className="text-sm text-white/80 font-semibold">آخر تحديث</p>
+                          <p className="font-bold text-base text-white">{new Date().toLocaleDateString('ar-SA')}</p>
                         </div>
                       </div>
-                      <div className="flex items-center gap-3 bg-white/15 backdrop-blur-sm rounded-xl px-4 py-3 border border-white/20 shadow-lg hover:bg-white/20 transition-all duration-300 group">
-                        <div className="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                          <i className="fas fa-clock text-white text-sm"></i>
+                      <div className="flex items-center gap-4 bg-white/20 backdrop-blur-md rounded-2xl px-6 py-4 border-2 border-white/30 shadow-xl hover:bg-white/25 hover:scale-105 transition-all duration-300 group">
+                        <div className="w-10 h-10 bg-white/30 rounded-xl flex items-center justify-center group-hover:scale-110 group-hover:rotate-6 transition-all duration-300 shadow-lg">
+                          <i className="fas fa-clock text-white text-base"></i>
                         </div>
                         <div>
-                          <p className="text-xs text-white/70 font-medium">الوقت الحالي</p>
-                          <p className="font-bold text-sm">{new Date().toLocaleTimeString('ar-SA', { hour: '2-digit', minute: '2-digit' })}</p>
+                          <p className="text-sm text-white/80 font-semibold">الوقت الحالي</p>
+                          <p className="font-bold text-base text-white">{new Date().toLocaleTimeString('ar-SA', { hour: '2-digit', minute: '2-digit' })}</p>
                         </div>
                       </div>
                     </div>
@@ -307,13 +308,14 @@ const Dashboard: React.FC = () => {
                 </div>
                 
                 {!isBeneficiary && (
-                  <div className="flex flex-col items-center gap-4">
-                    <div className="w-48 h-48 bg-white/15 backdrop-blur-sm rounded-full flex items-center justify-center border-4 border-white/30 shadow-3xl group-hover:scale-105 transition-transform duration-500">
-                      <i className="fas fa-chart-line text-6xl text-white group-hover:rotate-12 transition-transform duration-500"></i>
+                  <div className="flex flex-col items-center gap-6">
+                    <div className="w-52 h-52 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center border-4 border-white/40 shadow-3xl group-hover:scale-110 group-hover:rotate-12 transition-all duration-700 relative overflow-hidden">
+                      <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent"></div>
+                      <i className="fas fa-chart-line text-7xl text-white group-hover:rotate-12 transition-transform duration-500 relative z-10 drop-shadow-2xl"></i>
                     </div>
-                    <div className="text-center bg-white/10 backdrop-blur-sm rounded-2xl px-6 py-4 border border-white/20 group-hover:bg-white/15 transition-all duration-300">
-                      <p className="text-white/80 text-base font-medium">نظام إدارة المساعدات</p>
-                      <p className="text-white font-bold text-xl">v2.1.0</p>
+                    <div className="text-center bg-white/15 backdrop-blur-md rounded-3xl px-8 py-6 border-2 border-white/30 group-hover:bg-white/20 group-hover:scale-105 transition-all duration-300 shadow-xl">
+                      <p className="text-white/90 text-lg font-semibold mb-2">نظام إدارة المساعدات</p>
+                      <p className="text-white font-black text-2xl">v2.1.0</p>
                     </div>
                   </div>
                 )}

@@ -4,6 +4,7 @@ import { Beneficiary, Organization, Project, Assistance, AidFile, User } from '@
 export const defaultBeneficiaries: Beneficiary[] = [
   {
     id: 1,
+    fullName: "فاطمة أحمد محمد علي",
     firstName: "فاطمة",
     secondName: "أحمد",
     thirdName: "محمد",
@@ -20,6 +21,7 @@ export const defaultBeneficiaries: Beneficiary[] = [
   },
   {
     id: 2,
+    fullName: "محمد علي حسن عبدالله",
     firstName: "محمد",
     secondName: "علي",
     thirdName: "حسن",
@@ -36,6 +38,7 @@ export const defaultBeneficiaries: Beneficiary[] = [
   },
   {
     id: 3,
+    fullName: "سارة عبدالله خالد سعد",
     firstName: "سارة",
     secondName: "عبدالله",
     thirdName: "خالد",
@@ -52,6 +55,7 @@ export const defaultBeneficiaries: Beneficiary[] = [
   },
   {
     id: 4,
+    fullName: "عبدالرحمن خالد سعد محمد",
     firstName: "عبدالرحمن",
     secondName: "خالد",
     thirdName: "سعد",
@@ -68,6 +72,7 @@ export const defaultBeneficiaries: Beneficiary[] = [
   },
   {
     id: 5,
+    fullName: "نورا سعد محمد علي",
     firstName: "نورا",
     secondName: "سعد",
     thirdName: "محمد",
@@ -84,6 +89,7 @@ export const defaultBeneficiaries: Beneficiary[] = [
   },
   {
     id: 6,
+    fullName: "أحمد محمد علي حسن",
     firstName: "أحمد",
     secondName: "محمد",
     thirdName: "علي",
@@ -100,6 +106,7 @@ export const defaultBeneficiaries: Beneficiary[] = [
   },
   {
     id: 7,
+    fullName: "مريم عبدالرحمن خالد سعد",
     firstName: "مريم",
     secondName: "عبدالرحمن",
     thirdName: "خالد",
@@ -116,6 +123,7 @@ export const defaultBeneficiaries: Beneficiary[] = [
   },
   {
     id: 8,
+    fullName: "يوسف أحمد محمد علي",
     firstName: "يوسف",
     secondName: "أحمد",
     thirdName: "محمد",
@@ -129,6 +137,75 @@ export const defaultBeneficiaries: Beneficiary[] = [
     familyMembers: 4,
     income: 3800,
     createdAt: "2024-01-08"
+  },
+  // مستفيدين جدد من الموقع
+  {
+    id: 9,
+    fullName: "أميرة محمد أحمد حسن",
+    firstName: "أميرة",
+    secondName: "محمد",
+    thirdName: "أحمد",
+    lastName: "حسن",
+    nationalId: "90123456789012",
+    phone: "01090123456",
+    address: "لم يتم تحديد العنوان",
+    gender: "أنثى",
+    religion: "مسلمة",
+    maritalStatus: "أرملة",
+    familyMembers: 3,
+    income: 1200,
+    createdAt: "2024-01-25"
+  },
+  {
+    id: 10,
+    fullName: "عبدالله سعد محمد علي",
+    firstName: "عبدالله",
+    secondName: "سعد",
+    thirdName: "محمد",
+    lastName: "علي",
+    nationalId: "01234567890123",
+    phone: "01001234567",
+    address: "لم يتم تحديد العنوان",
+    gender: "ذكر",
+    religion: "مسلم",
+    maritalStatus: "متزوج",
+    familyMembers: 5,
+    income: 2000,
+    createdAt: "2024-01-26"
+  },
+  {
+    id: 11,
+    fullName: "نورا عبدالرحمن خالد سعد",
+    firstName: "نورا",
+    secondName: "عبدالرحمن",
+    thirdName: "خالد",
+    lastName: "سعد",
+    nationalId: "12345678901234",
+    phone: "01012345678",
+    address: "لم يتم تحديد العنوان",
+    gender: "أنثى",
+    religion: "مسلمة",
+    maritalStatus: "مطلقة",
+    familyMembers: 2,
+    income: 1500,
+    createdAt: "2024-01-27"
+  },
+  {
+    id: 12,
+    fullName: "محمود أحمد علي حسن",
+    firstName: "محمود",
+    secondName: "أحمد",
+    thirdName: "علي",
+    lastName: "حسن",
+    nationalId: "23456789012345",
+    phone: "01023456789",
+    address: "لم يتم تحديد العنوان",
+    gender: "ذكر",
+    religion: "مسلم",
+    maritalStatus: "عازب",
+    familyMembers: 1,
+    income: 800,
+    createdAt: "2024-01-28"
   }
 ];
 
@@ -346,6 +423,47 @@ export const defaultAssistances: Assistance[] = [
     status: "معتمد",
     date: "2024-01-22",
     notes: "رسوم مدرسية للفصل الدراسي الثاني"
+  },
+  // طلبات جديدة من الموقع
+  {
+    id: 9,
+    beneficiaryId: 9,
+    type: "طبية",
+    amount: 3200,
+    paymentMethod: "تحويل بنكي",
+    status: "معلق",
+    date: "2024-01-25",
+    notes: "طلب مساعدة من الموقع - علاج طبي عاجل"
+  },
+  {
+    id: 10,
+    beneficiaryId: 10,
+    type: "مالية",
+    amount: 1500,
+    paymentMethod: "نقدي",
+    status: "معلق",
+    date: "2024-01-26",
+    notes: "طلب مساعدة من الموقع - مساعدة مالية للأسر المحتاجة"
+  },
+  {
+    id: 11,
+    beneficiaryId: 11,
+    type: "تعليمية",
+    amount: 2800,
+    paymentMethod: "حساب داخلي",
+    status: "معلق",
+    date: "2024-01-27",
+    notes: "طلب مساعدة من الموقع - رسوم دراسية"
+  },
+  {
+    id: 12,
+    beneficiaryId: 12,
+    type: "أيتام",
+    amount: 4000,
+    paymentMethod: "تحويل بنكي",
+    status: "معلق",
+    date: "2024-01-28",
+    notes: "طلب مساعدة من الموقع - كفالة أيتام"
   }
 ];
 

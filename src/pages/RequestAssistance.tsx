@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
+import { useApp } from '@/context/AppContext';
 import Button from '@/components/UI/Button';
 import Modal from '@/components/UI/Modal';
 import PageTransition from '@/components/UI/PageTransition';
@@ -55,6 +56,7 @@ interface FormErrors {
 
 const RequestAssistance: React.FC = () => {
   const { user } = useAuth();
+  const { addBeneficiary, addAssistance, getBeneficiaryByNationalId } = useApp();
   const [formData, setFormData] = useState<FormData>({
     fullName: '',
     nationalId: '',
@@ -193,8 +195,43 @@ const RequestAssistance: React.FC = () => {
     setIsSubmitting(true);
 
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      // Check if beneficiary already exists
+      let beneficiary = getBeneficiaryByNationalId(formData.nationalId);
+      
+      // If beneficiary doesn't exist, create new one
+      if (!beneficiary) {
+        const nameParts = formData.fullName.split(' ');
+        const firstName = nameParts[0] || '';
+        const secondName = nameParts[1] || '';
+        const thirdName = nameParts[2] || '';
+        const lastName = nameParts.slice(3).join(' ') || '';
+
+        beneficiary = await addBeneficiary({
+          fullName: formData.fullName,
+          firstName,
+          secondName,
+          thirdName,
+          lastName,
+          nationalId: formData.nationalId,
+          phone: formData.phone,
+          address: 'لم يتم تحديد العنوان', // Default address
+          gender: formData.gender as 'ذكر' | 'أنثى',
+          religion: formData.religion as 'مسلم' | 'مسلمة' | 'مسيحي' | 'مسيحية' | 'أخرى',
+          maritalStatus: formData.maritalStatus as 'عازب' | 'عزباء' | 'متزوج' | 'متزوجة' | 'مطلق' | 'مطلقة' | 'أرمل' | 'أرملة',
+          familyMembers: parseInt(formData.familyMembers),
+          income: parseFloat(formData.income)
+        });
+      }
+
+      // Create assistance request
+      await addAssistance({
+        beneficiaryId: beneficiary.id,
+        type: formData.assistanceType as 'مالية' | 'علاجية' | 'تعليمية' | 'طبية' | 'أيتام' | 'أرامل' | 'ذوي الاحتياجات' | 'أسر السجناء',
+        amount: parseFloat(formData.amount),
+        paymentMethod: formData.paymentMethod as 'نقدي' | 'تحويل بنكي' | 'شيك' | 'حساب داخلي' | 'فيزا',
+        status: 'معلق', // New requests start as pending
+        notes: formData.notes || 'طلب مساعدة من الموقع'
+      });
       
       setShowSuccessModal(true);
       toast.success('تم إرسال طلب المساعدة بنجاح');
@@ -217,6 +254,7 @@ const RequestAssistance: React.FC = () => {
         supportingDocument: null
       });
     } catch (error) {
+      console.error('Error submitting request:', error);
       toast.error('حدث خطأ أثناء إرسال الطلب');
     } finally {
       setIsSubmitting(false);
