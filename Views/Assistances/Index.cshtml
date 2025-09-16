@@ -1,0 +1,246 @@
+@model IEnumerable<AssistanceManagementSystem.Models.Assistance>
+@{
+    ViewData["Title"] = "إدارة المساعدات";
+}
+
+<div class="min-h-screen">
+    <!-- Header -->
+    <div class="page-header">
+        <div class="d-flex flex-column flex-sm-row align-items-center justify-content-between">
+            <div>
+                <h1 class="page-title d-flex align-items-center gap-3">
+                    <div class="header-icon">
+                        <i class="fas fa-hand-holding-heart"></i>
+                    </div>
+                    إدارة المساعدات
+                </h1>
+                <p class="page-subtitle">إدارة المساعدات والموافقة عليها</p>
+            </div>
+            <div class="mt-4 mt-sm-0">
+                <a href="@Url.Action("Create", "Assistances")" class="btn btn-primary">
+                    <i class="fas fa-plus me-2"></i>
+                    إضافة مساعدة جديدة
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Statistics Cards -->
+    <div class="stats-grid mb-6">
+        <div class="stat-card">
+            <div class="stat-header">
+                <div class="stat-icon">
+                    <i class="fas fa-hand-holding-heart"></i>
+                </div>
+            </div>
+            <div class="stat-title">إجمالي المساعدات</div>
+            <div class="stat-value">@Model.Count()</div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-header">
+                <div class="stat-icon" style="background: linear-gradient(135deg, var(--success-500), var(--success-600));">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+            </div>
+            <div class="stat-title">المدفوع</div>
+            <div class="stat-value">@Model.Count(a => a.Status == "مدفوع")</div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-header">
+                <div class="stat-icon" style="background: linear-gradient(135deg, var(--warning-500), var(--warning-600));">
+                    <i class="fas fa-clock"></i>
+                </div>
+            </div>
+            <div class="stat-title">المعلق</div>
+            <div class="stat-value">@Model.Count(a => a.Status == "معلق")</div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-header">
+                <div class="stat-icon" style="background: linear-gradient(135deg, var(--info-500), var(--info-600));">
+                    <i class="fas fa-money-bill-wave"></i>
+                </div>
+            </div>
+            <div class="stat-title">إجمالي المبلغ</div>
+            <div class="stat-value">@Model.Sum(a => a.Amount).ToString("N0") ج.م</div>
+        </div>
+    </div>
+
+    <!-- Filters -->
+    <div class="content-section mb-6">
+        <div class="section-header">
+            <h2 class="section-title d-flex align-items-center gap-3">
+                <div class="header-icon" style="background: linear-gradient(135deg, var(--info-500), var(--info-600));">
+                    <i class="fas fa-filter"></i>
+                </div>
+                تصفية البيانات
+            </h2>
+        </div>
+        
+        <div class="card-body">
+            <form method="get" class="d-grid gap-4" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));">
+                <div class="form-group">
+                    <label class="form-label">نوع المساعدة</label>
+                    <select name="type" class="form-select">
+                        <option value="">جميع الأنواع</option>
+                        <option value="مالية">مالية</option>
+                        <option value="طبية">طبية</option>
+                        <option value="تعليمية">تعليمية</option>
+                        <option value="أيتام">أيتام</option>
+                        <option value="أرامل">أرامل</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">الحالة</label>
+                    <select name="status" class="form-select">
+                        <option value="">جميع الحالات</option>
+                        <option value="معلق">معلق</option>
+                        <option value="قيد المراجعة">قيد المراجعة</option>
+                        <option value="معتمد">معتمد</option>
+                        <option value="مدفوع">مدفوع</option>
+                        <option value="مرفوض">مرفوض</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">من تاريخ</label>
+                    <input type="date" name="fromDate" class="form-control">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">إلى تاريخ</label>
+                    <input type="date" name="toDate" class="form-control">
+                </div>
+
+                <div class="d-flex gap-3" style="grid-column: 1 / -1;">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-search me-2"></i>
+                        تطبيق التصفية
+                    </button>
+                    <a href="@Url.Action("Index", "Assistances")" class="btn btn-secondary">
+                        <i class="fas fa-times me-2"></i>
+                        مسح التصفية
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Assistances Table -->
+    <div class="content-section">
+        <div class="section-header">
+            <h2 class="section-title d-flex align-items-center gap-3">
+                <div class="header-icon" style="background: linear-gradient(135deg, var(--secondary-500), var(--secondary-600));">
+                    <i class="fas fa-table"></i>
+                </div>
+                قائمة المساعدات
+            </h2>
+        </div>
+        
+        <div class="table-container">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>المستفيد</th>
+                        <th>نوع المساعدة</th>
+                        <th>المبلغ</th>
+                        <th>طريقة الدفع</th>
+                        <th>الحالة</th>
+                        <th>التاريخ</th>
+                        <th>الإجراءات</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.Any())
+                    {
+                        @foreach (var assistance in Model)
+                        {
+                            <tr>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <div class="flex-shrink-0">
+                                            <div class="table-avatar">
+                                                <i class="fas fa-user"></i>
+                                            </div>
+                                        </div>
+                                        <div class="mr-4">
+                                            <div class="table-text-primary">@assistance.Beneficiary?.FullName</div>
+                                            <div class="table-text-secondary">@assistance.Beneficiary?.NationalId</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="badge badge-primary">
+                                        @assistance.Type
+                                    </span>
+                                </td>
+                                <td>
+                                    @assistance.Amount.ToString("N0") ج.م
+                                </td>
+                                <td>
+                                    @assistance.PaymentMethod
+                                </td>
+                                <td>
+                                    @{
+                                        var statusClass = assistance.Status switch
+                                        {
+                                            "مدفوع" => "badge-success",
+                                            "معتمد" => "badge-primary",
+                                            "قيد المراجعة" => "badge-warning",
+                                            "معلق" => "badge-info",
+                                            "مرفوض" => "badge-error",
+                                            _ => "badge-neutral"
+                                        };
+                                    }
+                                    <span class="badge @statusClass">
+                                        @assistance.Status
+                                    </span>
+                                </td>
+                                <td>
+                                    @assistance.Date.ToString("yyyy-MM-dd")
+                                </td>
+                                <td>
+                                    <div class="d-flex gap-2">
+                                        <a href="@Url.Action("Details", "Assistances", new { id = assistance.Id })" class="btn btn-sm btn-outline">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                        <a href="@Url.Action("Edit", "Assistances", new { id = assistance.Id })" class="btn btn-sm btn-outline">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        @if (assistance.Status == "معلق")
+                                        {
+                                            <a href="@Url.Action("Approve", "Assistances", new { id = assistance.Id })" class="btn btn-sm btn-outline" onclick="return confirm('هل أنت متأكد من اعتماد هذه المساعدة؟')">
+                                                <i class="fas fa-check"></i>
+                                            </a>
+                                            <a href="@Url.Action("Reject", "Assistances", new { id = assistance.Id })" class="btn btn-sm btn-outline" onclick="return confirm('هل أنت متأكد من رفض هذه المساعدة؟')">
+                                                <i class="fas fa-times"></i>
+                                            </a>
+                                        }
+                                        @if (assistance.Status == "معتمد")
+                                        {
+                                            <a href="@Url.Action("MarkPaid", "Assistances", new { id = assistance.Id })" class="btn btn-sm btn-outline" onclick="return confirm('هل أنت متأكد من تسجيل هذه المساعدة كمدفوعة؟')">
+                                                <i class="fas fa-money-bill-wave"></i>
+                                            </a>
+                                        }
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="7" class="text-center py-12">
+                                <i class="fas fa-inbox text-4xl text-neutral-300 mb-4"></i>
+                                <p class="text-lg text-neutral-900">لا توجد مساعدات في النظام</p>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,242 @@
+@model AssistanceManagementSystem.Models.ApplicationUser
+@{
+    ViewData["Title"] = "تعديل المستخدم";
+}
+
+<div class="page-header">
+    <div class="d-flex justify-content-between align-items-center">
+        <div>
+            <h1 class="page-title">تعديل المستخدم</h1>
+            <p class="page-subtitle">تعديل بيانات المستخدم: @Model.FullName</p>
+        </div>
+        <div>
+            <a href="@Url.Action("Index")" class="btn btn-outline-secondary">
+                <i class="fas fa-arrow-right"></i> العودة للقائمة
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="content-section">
+    <div class="section-header">
+        <h2 class="section-title">بيانات المستخدم</h2>
+    </div>
+    
+    <div class="p-4">
+        <form asp-action="Edit" method="post" class="needs-validation" novalidate>
+            <input asp-for="Id" type="hidden" />
+            <input asp-for="CreatedAt" type="hidden" />
+            
+            <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+            
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label asp-for="UserName" class="form-label">اسم المستخدم</label>
+                        <input asp-for="UserName" class="form-control" placeholder="أدخل اسم المستخدم" required />
+                        <span asp-validation-for="UserName" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label asp-for="Email" class="form-label">البريد الإلكتروني</label>
+                        <input asp-for="Email" type="email" class="form-control" placeholder="أدخل البريد الإلكتروني" required />
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label asp-for="FullName" class="form-label">الاسم الكامل</label>
+                        <input asp-for="FullName" class="form-control" placeholder="أدخل الاسم الكامل" required />
+                        <span asp-validation-for="FullName" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label asp-for="PhoneNumber" class="form-label">رقم الهاتف</label>
+                        <input asp-for="PhoneNumber" class="form-control" placeholder="أدخل رقم الهاتف" />
+                        <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label asp-for="BranchId" class="form-label">الفرع</label>
+                        <select asp-for="BranchId" class="form-select">
+                            <option value="">اختر الفرع</option>
+                            @foreach (var branch in ViewBag.Branches)
+                            {
+                                <option value="@branch.Id" selected="@(Model.BranchId == branch.Id)">@branch.Name</option>
+                            }
+                        </select>
+                        <span asp-validation-for="BranchId" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <div class="form-check">
+                            <input asp-for="IsActive" class="form-check-input" type="checkbox" />
+                            <label asp-for="IsActive" class="form-check-label">
+                                المستخدم نشط
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="mb-3">
+                        <label class="form-label">الأدوار</label>
+                        <div class="form-check-group">
+                            @foreach (var role in ViewBag.Roles)
+                            {
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="selectedRoles" value="@role.Name" id="role_@role.Name" @(ViewBag.UserRoles.Contains(role.Name) ? "checked" : "")>
+                                    <label class="form-check-label" for="role_@role.Name">
+                                        @role.Name
+                                    </label>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="d-flex gap-2">
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-save"></i> حفظ التغييرات
+                </button>
+                <a href="@Url.Action("Index")" class="btn btn-outline-secondary">
+                    <i class="fas fa-times"></i> إلغاء
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Password Reset Section -->
+<div class="content-section mt-4">
+    <div class="section-header">
+        <h2 class="section-title">إعادة تعيين كلمة المرور</h2>
+    </div>
+    
+    <div class="p-4">
+        <form asp-action="ResetPassword" method="post" class="needs-validation" novalidate>
+            <input name="id" value="@Model.Id" type="hidden" />
+            
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label for="newPassword" class="form-label">كلمة المرور الجديدة</label>
+                        <input type="password" name="newPassword" class="form-control" placeholder="أدخل كلمة المرور الجديدة" required />
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label for="confirmPassword" class="form-label">تأكيد كلمة المرور</label>
+                        <input type="password" name="confirmPassword" class="form-control" placeholder="أعد إدخال كلمة المرور" required />
+                    </div>
+                </div>
+            </div>
+            
+            <div class="d-flex gap-2">
+                <button type="submit" class="btn btn-warning">
+                    <i class="fas fa-key"></i> إعادة تعيين كلمة المرور
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Form validation
+        (function() {
+            'use strict';
+            window.addEventListener('load', function() {
+                var forms = document.getElementsByClassName('needs-validation');
+                var validation = Array.prototype.filter.call(forms, function(form) {
+                    form.addEventListener('submit', function(event) {
+                        if (form.checkValidity() === false) {
+                            event.preventDefault();
+                            event.stopPropagation();
+                        }
+                        form.classList.add('was-validated');
+                    }, false);
+                });
+            }, false);
+        })();
+        
+        // Password confirmation validation
+        document.querySelector('input[name="confirmPassword"]').addEventListener('input', function() {
+            var password = document.querySelector('input[name="newPassword"]').value;
+            var confirmPassword = this.value;
+            
+            if (password !== confirmPassword) {
+                this.setCustomValidity('كلمة المرور غير متطابقة');
+            } else {
+                this.setCustomValidity('');
+            }
+        });
+        
+        // Password strength indicator
+        document.querySelector('input[name="newPassword"]').addEventListener('input', function() {
+            var password = this.value;
+            var strength = 0;
+            
+            if (password.length >= 6) strength++;
+            if (password.match(/[a-z]/)) strength++;
+            if (password.match(/[A-Z]/)) strength++;
+            if (password.match(/[0-9]/)) strength++;
+            if (password.match(/[^a-zA-Z0-9]/)) strength++;
+            
+            var strengthText = '';
+            var strengthColor = '';
+            
+            switch(strength) {
+                case 0:
+                case 1:
+                    strengthText = 'ضعيف جداً';
+                    strengthColor = 'text-danger';
+                    break;
+                case 2:
+                    strengthText = 'ضعيف';
+                    strengthColor = 'text-danger';
+                    break;
+                case 3:
+                    strengthText = 'متوسط';
+                    strengthColor = 'text-warning';
+                    break;
+                case 4:
+                    strengthText = 'قوي';
+                    strengthColor = 'text-success';
+                    break;
+                case 5:
+                    strengthText = 'قوي جداً';
+                    strengthColor = 'text-success';
+                    break;
+            }
+            
+            var strengthIndicator = document.getElementById('passwordStrength');
+            if (!strengthIndicator) {
+                strengthIndicator = document.createElement('small');
+                strengthIndicator.id = 'passwordStrength';
+                strengthIndicator.className = 'form-text';
+                this.parentNode.appendChild(strengthIndicator);
+            }
+            
+            if (password.length > 0) {
+                strengthIndicator.textContent = 'قوة كلمة المرور: ' + strengthText;
+                strengthIndicator.className = 'form-text ' + strengthColor;
+            } else {
+                strengthIndicator.textContent = '';
+            }
+        });
+    </script>
+}

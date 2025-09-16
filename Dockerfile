@@ -1,23 +1,21 @@
-# Use Node.js 18 Alpine as base image
-FROM node:18-alpine
-
-# Set working directory
+# Use .NET 8 runtime as base image
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
 WORKDIR /app
+EXPOSE 80
 
-# Copy package files
-COPY package*.json ./
-
-# Install dependencies
-RUN npm ci --only=production
-
-# Copy source code
+# Use .NET 8 SDK for building
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+WORKDIR /src
+COPY ["AssistanceManagementSystem.csproj", "."]
+RUN dotnet restore "./AssistanceManagementSystem.csproj"
 COPY . .
+WORKDIR "/src/."
+RUN dotnet build "AssistanceManagementSystem.csproj" -c Release -o /app/build
 
-# Build the application
-RUN npm run build
+FROM build AS publish
+RUN dotnet publish "AssistanceManagementSystem.csproj" -c Release -o /app/publish /p:UseAppHost=false
 
-# Expose port
-EXPOSE 3000
-
-# Start the application
-CMD ["npm", "run", "preview"]
+FROM base AS final
+WORKDIR /app
+COPY --from=publish /app/publish .
+ENTRYPOINT ["dotnet", "AssistanceManagementSystem.dll"]

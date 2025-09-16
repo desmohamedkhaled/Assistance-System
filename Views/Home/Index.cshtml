@@ -1,0 +1,234 @@
+@model AssistanceManagementSystem.Services.DashboardStatistics
+@{
+    ViewData["Title"] = "لوحة التحكم";
+}
+
+<div class="dashboard-container" data-aos="fade-in" data-aos-duration="1000">
+    <!-- Welcome Section -->
+    <div class="welcome-section mb-4" data-aos="fade-up" data-aos-duration="800">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <div class="welcome-content">
+                    <h1 class="welcome-title">
+                        مرحباً بك في نظام إدارة المساعدات
+                        <span class="welcome-emoji">👋</span>
+                    </h1>
+                    <p class="welcome-subtitle">
+                        نظرة شاملة على إحصائيات النظام والأنشطة الحالية
+                    </p>
+                    <div class="welcome-stats">
+                        <div class="stat-item">
+                            <i class="fas fa-calendar-alt text-primary"></i>
+                            <span>آخر تحديث: @DateTime.Now.ToString("yyyy-MM-dd")</span>
+                        </div>
+                        <div class="stat-item">
+                            <i class="fas fa-clock text-success"></i>
+                            <span>الوقت الحالي: @DateTime.Now.ToString("HH:mm")</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="welcome-illustration">
+                    <div class="illustration-card">
+                        <div class="illustration-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <div class="illustration-text">
+                            <h6>نظام إدارة المساعدات</h6>
+                            <p>الإصدار 2.1.0</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+        <!-- Hero Section -->
+        <div class="card mb-8">
+            <div class="card-body">
+                <div class="d-flex flex-column flex-lg-row align-items-center justify-content-between gap-4">
+                    <div class="flex-1 text-center text-lg-right">
+                        <div class="d-flex flex-column flex-lg-row align-items-center gap-4 mb-4">
+                            <div class="header-icon">
+                                <i class="fas fa-tachometer-alt"></i>
+                            </div>
+                            <div class="text-center text-lg-right">
+                                <h1 class="page-title mb-2">لوحة التحكم</h1>
+                                <p class="page-subtitle">نظرة عامة على نظام إدارة المساعدات</p>
+                            </div>
+                        </div>
+                        
+                        <div class="d-flex flex-wrap gap-3 justify-content-center justify-content-lg-start">
+                            <div class="d-flex align-items-center gap-3 p-3 bg-primary-50 rounded-xl border border-primary-200">
+                                <div class="stat-icon">
+                                    <i class="fas fa-calendar-alt"></i>
+                                </div>
+                                <div>
+                                    <p class="mb-0 text-sm text-primary-700 font-weight-medium">آخر تحديث</p>
+                                    <p class="mb-0 font-weight-bold text-primary-900">@DateTime.Now.ToString("yyyy-MM-dd")</p>
+                                </div>
+                            </div>
+                            <div class="d-flex align-items-center gap-3 p-3 bg-secondary-50 rounded-xl border border-secondary-200">
+                                <div class="stat-icon" style="background: linear-gradient(135deg, var(--secondary-500), var(--secondary-600));">
+                                    <i class="fas fa-clock"></i>
+                                </div>
+                                <div>
+                                    <p class="mb-0 text-sm text-secondary-700 font-weight-medium">الوقت الحالي</p>
+                                    <p class="mb-0 font-weight-bold text-secondary-900">@DateTime.Now.ToString("HH:mm")</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="d-flex flex-column align-items-center gap-4">
+                        <div class="w-32 h-32 bg-gradient-to-br from-primary-500 to-secondary-500 rounded-full d-flex align-items-center justify-content-center shadow-lg">
+                            <i class="fas fa-chart-line text-white" style="font-size: 3rem;"></i>
+                        </div>
+                        <div class="text-center p-4 bg-neutral-50 rounded-xl border border-neutral-200">
+                            <p class="mb-1 text-neutral-700 font-weight-medium">نظام إدارة المساعدات</p>
+                            <p class="mb-0 font-weight-bold text-neutral-900">v2.1.0</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    <!-- Statistics Section -->
+    <div class="statistics-section mb-4" data-aos="fade-up" data-aos-duration="800" data-aos-delay="200">
+        <div class="section-header mb-4">
+            <div class="row align-items-center">
+                <div class="col-lg-8">
+                    <h2 class="section-title">
+                        <i class="fas fa-chart-bar text-primary"></i>
+                        الإحصائيات الرئيسية
+                    </h2>
+                    <p class="section-subtitle">نظرة شاملة على بيانات النظام</p>
+                </div>
+                <div class="col-lg-4">
+                    <div class="section-info">
+                        <i class="fas fa-info-circle text-primary"></i>
+                        <span>انقر على أي بطاقة للانتقال للتفاصيل</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+            
+        <div class="row g-4">
+            @{
+                var stats = new[]
+                {
+                    new { Title = "إجمالي المستفيدين", Value = Model.TotalBeneficiaries.ToString(), Change = "+12%", Positive = true, Path = "/Beneficiaries", Icon = "fa-users", Color = "primary" },
+                    new { Title = "إجمالي المساعدات", Value = Model.TotalAssistances.ToString(), Change = "+8%", Positive = true, Path = "/Assistances", Icon = "fa-hand-holding-heart", Color = "success" },
+                    new { Title = "المؤسسات", Value = Model.TotalOrganizations.ToString(), Change = "+2%", Positive = true, Path = "/Organizations", Icon = "fa-building", Color = "info" },
+                    new { Title = "المشاريع", Value = Model.TotalProjects.ToString(), Change = "+5%", Positive = true, Path = "/Projects", Icon = "fa-project-diagram", Color = "warning" },
+                    new { Title = "المبلغ المدفوع", Value = Model.TotalPaidAmount.ToString("C"), Change = "+15%", Positive = true, Path = "/Assistances?status=مدفوع", Icon = "fa-money-bill-wave", Color = "success" },
+                    new { Title = "المبلغ المعلق", Value = Model.TotalPendingAmount.ToString("C"), Change = "-3%", Positive = false, Path = "/Assistances?status=معلق", Icon = "fa-clock", Color = "warning" },
+                    new { Title = "المبلغ المعتمد", Value = Model.TotalApprovedAmount.ToString("C"), Change = "+10%", Positive = true, Path = "/Assistances?status=معتمد", Icon = "fa-check-circle", Color = "primary" },
+                    new { Title = "المستفيدين الذكور", Value = Model.MaleBeneficiaries.ToString(), Change = "+7%", Positive = true, Path = "/Beneficiaries?gender=ذكر", Icon = "fa-male", Color = "info" },
+                    new { Title = "المستفيدين الإناث", Value = Model.FemaleBeneficiaries.ToString(), Change = "+9%", Positive = true, Path = "/Beneficiaries?gender=أنثى", Icon = "fa-female", Color = "danger" },
+                    new { Title = "متوسط المساعدة", Value = Model.AverageAssistanceAmount.ToString("C"), Change = "+4%", Positive = true, Path = "/Reports", Icon = "fa-percentage", Color = "secondary" }
+                };
+            }
+            
+            @for (int i = 0; i < stats.Length; i++)
+            {
+                var stat = stats[i];
+                var delay = i * 100;
+                
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12">
+                    <div class="stat-card" 
+                         data-aos="fade-up" 
+                         data-aos-delay="@delay"
+                         onclick="window.location.href='@stat.Path'">
+                        <div class="stat-card-header">
+                            <div class="stat-icon bg-@stat.Color">
+                                <i class="fas @stat.Icon"></i>
+                            </div>
+                            <div class="stat-change @(stat.Positive ? "positive" : "negative")">
+                                <i class="fas @(stat.Positive ? "fa-arrow-up" : "fa-arrow-down")"></i>
+                                <span>@stat.Change</span>
+                            </div>
+                        </div>
+                        <div class="stat-card-body">
+                            <h3 class="stat-value">@stat.Value</h3>
+                            <p class="stat-title">@stat.Title</p>
+                        </div>
+                        <div class="stat-card-footer">
+                            <span class="stat-link">
+                                <i class="fas fa-arrow-left"></i>
+                                انقر للتفاصيل
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+        </div>
+
+    <!-- Quick Actions Section -->
+    <div class="quick-actions-section mb-4" data-aos="fade-up" data-aos-duration="800" data-aos-delay="400">
+        <div class="section-header mb-4">
+            <div class="row align-items-center">
+                <div class="col-lg-8">
+                    <h2 class="section-title">
+                        <i class="fas fa-bolt text-warning"></i>
+                        الإجراءات السريعة
+                    </h2>
+                    <p class="section-subtitle">الوصول السريع للمهام الأساسية</p>
+                </div>
+                <div class="col-lg-4">
+                    <div class="section-info">
+                        <i class="fas fa-magic text-warning"></i>
+                        <span>اختر الإجراء المناسب</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row g-4">
+            @{
+                var quickActions = new[]
+                {
+                    new { Icon = "fas fa-plus", Label = "إضافة مستفيد", Path = "/Beneficiaries/Create", Color = "primary" },
+                    new { Icon = "fas fa-hand-holding-heart", Label = "طلب مساعدة", Path = "/Assistances/RequestAssistance", Color = "success" },
+                    new { Icon = "fas fa-file-alt", Label = "ملفات المساعدات", Path = "/Assistances", Color = "info" },
+                    new { Icon = "fas fa-chart-bar", Label = "التقارير", Path = "/Reports", Color = "warning" },
+                    new { Icon = "fas fa-users", Label = "إدارة المستخدمين", Path = "/UserManagement", Color = "danger" },
+                    new { Icon = "fas fa-cog", Label = "الإعدادات", Path = "/Account/Settings", Color = "secondary" }
+                };
+            }
+            
+            @for (int i = 0; i < quickActions.Length; i++)
+            {
+                var action = quickActions[i];
+                var delay = 500 + (i * 100);
+                
+                <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12">
+                    <a href="@action.Path" class="quick-action-card" data-aos="fade-up" data-aos-delay="@delay">
+                        <div class="action-icon bg-@action.Color">
+                            <i class="@action.Icon"></i>
+                        </div>
+                        <div class="action-content">
+                            <h6 class="action-title">@action.Label</h6>
+                            <span class="action-link">
+                                <i class="fas fa-arrow-left"></i>
+                                انقر للانتقال
+                            </span>
+                        </div>
+                    </a>
+                </div>
+            }
+        </div>
+    </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Add any dashboard-specific JavaScript here
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize any dashboard functionality
+            console.log('Dashboard loaded successfully');
+        });
+    </script>
+}

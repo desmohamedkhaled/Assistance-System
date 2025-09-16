@@ -1,0 +1,148 @@
+@model AssistanceManagementSystem.Controllers.UserWithRoles
+@{
+    ViewData["Title"] = "حذف المستخدم";
+}
+
+<div class="page-header">
+    <div class="d-flex justify-content-between align-items-center">
+        <div>
+            <h1 class="page-title">حذف المستخدم</h1>
+            <p class="page-subtitle">تأكيد حذف المستخدم: @Model.User.FullName</p>
+        </div>
+        <div>
+            <a href="@Url.Action("Index")" class="btn btn-outline-secondary">
+                <i class="fas fa-arrow-right"></i> العودة للقائمة
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="content-section">
+    <div class="section-header">
+        <h2 class="section-title">تأكيد الحذف</h2>
+    </div>
+    
+    <div class="p-4">
+        <div class="alert alert-danger" role="alert">
+            <h4 class="alert-heading">
+                <i class="fas fa-exclamation-triangle"></i> تحذير!
+            </h4>
+            <p>أنت على وشك حذف المستخدم التالي نهائياً من النظام:</p>
+            <hr>
+            <p class="mb-0">هذا الإجراء لا يمكن التراجع عنه. تأكد من أنك تريد المتابعة.</p>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-6">
+                <div class="info-item">
+                    <label class="info-label">اسم المستخدم</label>
+                    <div class="info-value">@Model.User.UserName</div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="info-item">
+                    <label class="info-label">الاسم الكامل</label>
+                    <div class="info-value">@Model.User.FullName</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-6">
+                <div class="info-item">
+                    <label class="info-label">البريد الإلكتروني</label>
+                    <div class="info-value">@Model.User.Email</div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="info-item">
+                    <label class="info-label">الفرع</label>
+                    <div class="info-value">
+                        @if (Model.User.Branch != null)
+                        {
+                            <span class="badge bg-secondary">@Model.User.Branch.Name</span>
+                        }
+                        else
+                        {
+                            <span class="text-muted">غير محدد</span>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-6">
+                <div class="info-item">
+                    <label class="info-label">الأدوار</label>
+                    <div class="info-value">
+                        @if (Model.Roles.Any())
+                        {
+                            @foreach (var role in Model.Roles)
+                            {
+                                <span class="badge bg-primary me-1">@role</span>
+                            }
+                        }
+                        else
+                        {
+                            <span class="text-muted">لا توجد أدوار</span>
+                        }
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="info-item">
+                    <label class="info-label">الحالة</label>
+                    <div class="info-value">
+                        @if (Model.User.IsActive)
+                        {
+                            <span class="badge bg-success">نشط</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-danger">معطل</span>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-6">
+                <div class="info-item">
+                    <label class="info-label">تاريخ الإنشاء</label>
+                    <div class="info-value">@Model.User.CreatedAt.ToString("yyyy-MM-dd HH:mm")</div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="info-item">
+                    <label class="info-label">آخر تسجيل دخول</label>
+                    <div class="info-value">
+                        @if (Model.User.LastLogin.HasValue)
+                        {
+                            @Model.User.LastLogin.Value.ToString("yyyy-MM-dd HH:mm")
+                        }
+                        else
+                        {
+                            <span class="text-muted">لم يسجل دخول بعد</span>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <hr>
+        
+        <form asp-action="Delete" method="post" class="d-inline">
+            <input name="id" value="@Model.User.Id" type="hidden" />
+            <div class="d-flex gap-2">
+                <button type="submit" class="btn btn-danger">
+                    <i class="fas fa-trash"></i> تأكيد الحذف
+                </button>
+                <a href="@Url.Action("Index")" class="btn btn-outline-secondary">
+                    <i class="fas fa-times"></i> إلغاء
+                </a>
+            </div>
+        </form>
+    </div>
+</div>

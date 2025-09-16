@@ -1,0 +1,371 @@
+@model IEnumerable<AssistanceManagementSystem.Controllers.UserWithRoles>
+@{
+    ViewData["Title"] = "إدارة المستخدمين";
+}
+
+<div class="page-header">
+    <div class="d-flex justify-content-between align-items-center">
+        <div>
+            <h1 class="page-title">إدارة المستخدمين</h1>
+            <p class="page-subtitle">إدارة المستخدمين والأدوار</p>
+        </div>
+        <div>
+            <a href="@Url.Action("Create")" class="btn btn-primary">
+                <i class="fas fa-plus"></i> إضافة مستخدم جديد
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Filters and Search -->
+<div class="content-section mb-4">
+    <div class="section-header">
+        <h2 class="section-title">البحث والتصفية</h2>
+    </div>
+    <div class="p-4">
+        <form method="get" class="row g-3">
+            <div class="col-md-4">
+                <label class="form-label">البحث</label>
+                <div class="search-container">
+                    <input type="text" name="search" value="@ViewBag.Search" class="search-input" placeholder="البحث بالاسم أو البريد الإلكتروني">
+                    <i class="fas fa-search search-icon"></i>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">الدور</label>
+                <select name="role" class="form-select">
+                    <option value="">جميع الأدوار</option>
+                    @foreach (var role in ViewBag.Roles)
+                    {
+                        <option value="@role.Name" selected="@(ViewBag.Role == role.Name)">@role.Name</option>
+                    }
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">الفرع</label>
+                <select name="branchId" class="form-select">
+                    <option value="">جميع الفروع</option>
+                    @foreach (var branch in ViewBag.Branches)
+                    {
+                        <option value="@branch.Id" selected="@(ViewBag.BranchId == branch.Id)">@branch.Name</option>
+                    }
+                </select>
+            </div>
+            <div class="col-md-2">
+                <label class="form-label">&nbsp;</label>
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-search"></i> بحث
+                    </button>
+                    <a href="@Url.Action("Index")" class="btn btn-outline-secondary">
+                        <i class="fas fa-times"></i> مسح
+                    </a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Statistics Cards -->
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="stat-card">
+            <div class="stat-content">
+                <h3>إجمالي المستخدمين</h3>
+                <span class="stat-number">@ViewBag.TotalCount</span>
+                <span class="stat-label">مستخدم</span>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="stat-card">
+            <div class="stat-content">
+                <h3>المستخدمين النشطين</h3>
+                <span class="stat-number">@Model.Count(u => u.User.IsActive)</span>
+                <span class="stat-label">مستخدم</span>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="stat-card">
+            <div class="stat-content">
+                <h3>المديرين</h3>
+                <span class="stat-number">@Model.Count(u => u.Roles.Contains("Admin"))</span>
+                <span class="stat-label">مدير</span>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="stat-card">
+            <div class="stat-content">
+                <h3>موظفي الفروع</h3>
+                <span class="stat-number">@Model.Count(u => u.Roles.Contains("BranchManager") || u.Roles.Contains("Staff"))</span>
+                <span class="stat-label">موظف</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Users Table -->
+<div class="content-section">
+    <div class="section-header">
+        <h2 class="section-title">قائمة المستخدمين</h2>
+    </div>
+    
+    <div class="table-container">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>اسم المستخدم</th>
+                    <th>الاسم الكامل</th>
+                    <th>البريد الإلكتروني</th>
+                    <th>الهاتف</th>
+                    <th>الفرع</th>
+                    <th>الأدوار</th>
+                    <th>الحالة</th>
+                    <th>تاريخ الإنشاء</th>
+                    <th>الإجراءات</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var userWithRoles in Model)
+                {
+                    var user = userWithRoles.User;
+                    <tr>
+                        <td>@user.Id.Substring(0, 8)...</td>
+                        <td>
+                            <div class="d-flex align-items-center">
+                                <div class="avatar me-2">
+                                    <i class="fas fa-user"></i>
+                                </div>
+                                <div>
+                                    <div class="fw-bold">@user.UserName</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>@user.FullName</td>
+                        <td>
+                            <a href="mailto:@user.Email" class="text-decoration-none">
+                                <i class="fas fa-envelope me-1"></i>@user.Email
+                            </a>
+                        </td>
+                        <td>
+                            @if (!string.IsNullOrEmpty(user.PhoneNumber))
+                            {
+                                <a href="tel:@user.PhoneNumber" class="text-decoration-none">
+                                    <i class="fas fa-phone me-1"></i>@user.PhoneNumber
+                                </a>
+                            }
+                            else
+                            {
+                                <span class="text-muted">غير محدد</span>
+                            }
+                        </td>
+                        <td>
+                            @if (user.Branch != null)
+                            {
+                                <span class="badge bg-secondary">@user.Branch.Name</span>
+                            }
+                            else
+                            {
+                                <span class="text-muted">غير محدد</span>
+                            }
+                        </td>
+                        <td>
+                            @foreach (var role in userWithRoles.Roles)
+                            {
+                                <span class="badge bg-primary me-1">@role</span>
+                            }
+                        </td>
+                        <td>
+                            @if (user.IsActive)
+                            {
+                                <span class="badge bg-success">نشط</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-danger">معطل</span>
+                            }
+                        </td>
+                        <td>
+                            <small class="text-muted">@user.CreatedAt.ToString("yyyy-MM-dd")</small>
+                        </td>
+                        <td>
+                            <div class="btn-group" role="group">
+                                <a href="@Url.Action("Details", new { id = user.Id })" 
+                                   class="btn btn-outline-info btn-sm" 
+                                   data-bs-toggle="tooltip" 
+                                   title="عرض التفاصيل">
+                                    <i class="fas fa-eye"></i>
+                                </a>
+                                <a href="@Url.Action("Edit", new { id = user.Id })" 
+                                   class="btn btn-outline-warning btn-sm" 
+                                   data-bs-toggle="tooltip" 
+                                   title="تعديل">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                @if (!userWithRoles.Roles.Contains("Admin"))
+                                {
+                                    <button type="button" 
+                                            class="btn btn-outline-@(user.IsActive ? "warning" : "success") btn-sm" 
+                                            onclick="toggleUserStatus('@user.Id', @user.IsActive.ToString().ToLower())"
+                                            data-bs-toggle="tooltip" 
+                                            title="@(user.IsActive ? "تعطيل" : "تفعيل")">
+                                        <i class="fas fa-@(user.IsActive ? "ban" : "check")"></i>
+                                    </button>
+                                }
+                                @if (!userWithRoles.Roles.Contains("Admin"))
+                                {
+                                    <button type="button" 
+                                            class="btn btn-outline-danger btn-sm" 
+                                            data-bs-toggle="modal" 
+                                            data-bs-target="#deleteModal" 
+                                            data-user-id="@user.Id"
+                                            data-user-name="@user.FullName"
+                                            data-bs-toggle="tooltip" 
+                                            title="حذف">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                }
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    
+    <!-- Pagination -->
+    @if (ViewBag.TotalPages > 1)
+    {
+        <div class="d-flex justify-content-center mt-4">
+            <nav aria-label="Page navigation">
+                <ul class="pagination">
+                    @if (ViewBag.Page > 1)
+                    {
+                        <li class="page-item">
+                            <a class="page-link" href="@Url.Action("Index", new { page = ViewBag.Page - 1, search = ViewBag.Search, role = ViewBag.Role, branchId = ViewBag.BranchId })">السابق</a>
+                        </li>
+                    }
+                    
+                    @for (int i = Math.Max(1, ViewBag.Page - 2); i <= Math.Min(ViewBag.TotalPages, ViewBag.Page + 2); i++)
+                    {
+                        <li class="page-item @(i == ViewBag.Page ? "active" : "")">
+                            <a class="page-link" href="@Url.Action("Index", new { page = i, search = ViewBag.Search, role = ViewBag.Role, branchId = ViewBag.BranchId })">@i</a>
+                        </li>
+                    }
+                    
+                    @if (ViewBag.Page < ViewBag.TotalPages)
+                    {
+                        <li class="page-item">
+                            <a class="page-link" href="@Url.Action("Index", new { page = ViewBag.Page + 1, search = ViewBag.Search, role = ViewBag.Role, branchId = ViewBag.BranchId })">التالي</a>
+                        </li>
+                    }
+                </ul>
+            </nav>
+        </div>
+    }
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">تأكيد الحذف</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>هل أنت متأكد من حذف المستخدم <strong id="userName"></strong>؟</p>
+                <p class="text-danger"><small>تحذير: لا يمكن التراجع عن هذا الإجراء.</small></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
+                <form id="deleteForm" method="post" style="display: inline;">
+                    <button type="submit" class="btn btn-danger">حذف</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Reset Password Modal -->
+<div class="modal fade" id="resetPasswordModal" tabindex="-1" aria-labelledby="resetPasswordModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="resetPasswordModalLabel">إعادة تعيين كلمة المرور</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form id="resetPasswordForm" method="post">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="newPassword" class="form-label">كلمة المرور الجديدة</label>
+                        <input type="password" class="form-control" id="newPassword" name="newPassword" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="confirmPassword" class="form-label">تأكيد كلمة المرور</label>
+                        <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
+                    <button type="submit" class="btn btn-primary">إعادة تعيين</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Delete modal functionality
+        document.getElementById('deleteModal').addEventListener('show.bs.modal', function (event) {
+            var button = event.relatedTarget;
+            var userId = button.getAttribute('data-user-id');
+            var userName = button.getAttribute('data-user-name');
+            
+            var modal = this;
+            modal.querySelector('#userName').textContent = userName;
+            modal.querySelector('#deleteForm').action = '@Url.Action("Delete")/' + userId;
+        });
+
+        // Toggle user status
+        function toggleUserStatus(userId, isActive) {
+            if (confirm('هل أنت متأكد من ' + (isActive ? 'تعطيل' : 'تفعيل') + ' هذا المستخدم؟')) {
+                var form = document.createElement('form');
+                form.method = 'POST';
+                form.action = '@Url.Action("ToggleActive")/' + userId;
+                
+                var token = document.createElement('input');
+                token.type = 'hidden';
+                token.name = '__RequestVerificationToken';
+                token.value = '@Html.AntiForgeryToken()';
+                
+                form.appendChild(token);
+                document.body.appendChild(form);
+                form.submit();
+            }
+        }
+
+        // Reset password modal
+        function resetPassword(userId) {
+            var modal = new bootstrap.Modal(document.getElementById('resetPasswordModal'));
+            document.getElementById('resetPasswordForm').action = '@Url.Action("ResetPassword")/' + userId;
+            modal.show();
+        }
+
+        // Password confirmation validation
+        document.getElementById('confirmPassword').addEventListener('input', function() {
+            var password = document.getElementById('newPassword').value;
+            var confirmPassword = this.value;
+            
+            if (password !== confirmPassword) {
+                this.setCustomValidity('كلمة المرور غير متطابقة');
+            } else {
+                this.setCustomValidity('');
+            }
+        });
+    </script>
+}

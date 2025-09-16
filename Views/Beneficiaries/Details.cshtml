@@ -1,0 +1,222 @@
+@model AssistanceManagementSystem.Models.Beneficiary
+@{
+    ViewData["Title"] = "تفاصيل المستفيد";
+}
+
+<div class="min-h-screen bg-gradient-to-br from-geyser to-primary-50">
+    <!-- Header -->
+    <div class="bg-white rounded-xl shadow-lg p-6 mb-6">
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between">
+            <div>
+                <h1 class="text-3xl font-bold text-gray-800 mb-2">
+                    <i class="fas fa-user text-primary-600 mr-3"></i>
+                    تفاصيل المستفيد
+                </h1>
+                <p class="text-gray-600">عرض تفاصيل المستفيد والمساعدات المرتبطة به</p>
+            </div>
+            <div class="mt-4 sm:mt-0 flex space-x-2 space-x-reverse">
+                <a href="@Url.Action("Edit", "Beneficiaries", new { id = Model.Id })" class="btn-primary">
+                    <i class="fas fa-edit mr-2"></i>
+                    تعديل
+                </a>
+                <a href="@Url.Action("Index", "Beneficiaries")" class="btn-secondary">
+                    <i class="fas fa-arrow-right mr-2"></i>
+                    العودة للقائمة
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Beneficiary Details -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+        <!-- Basic Information -->
+        <div class="lg:col-span-2">
+            <div class="bg-white rounded-xl shadow-lg p-6">
+                <h2 class="text-xl font-bold text-gray-800 mb-4">
+                    <i class="fas fa-info-circle text-primary-600 mr-2"></i>
+                    المعلومات الشخصية
+                </h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">الاسم الكامل</label>
+                        <p class="text-lg font-semibold text-gray-900">@Model.FullName</p>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">الرقم القومي</label>
+                        <p class="text-gray-900">@Model.NationalId</p>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">رقم الهاتف</label>
+                        <p class="text-gray-900">@Model.Phone</p>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">الجنس</label>
+                        @{
+                            var genderClass = Model.Gender == "ذكر" ? "bg-blue-100 text-blue-800" : "bg-pink-100 text-pink-800";
+                        }
+                        <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium @genderClass">
+                            @Model.Gender
+                        </span>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">الدين</label>
+                        <p class="text-gray-900">@Model.Religion</p>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">الحالة الاجتماعية</label>
+                        <p class="text-gray-900">@Model.MaritalStatus</p>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">عدد أفراد العائلة</label>
+                        <p class="text-gray-900">@Model.FamilyMembers</p>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">الدخل</label>
+                        <p class="text-lg font-semibold text-gray-900">@Model.Income.ToString("N0") ج.م</p>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">الفرع</label>
+                        <p class="text-gray-900">@Model.Branch?.Name</p>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">تاريخ التسجيل</label>
+                        <p class="text-gray-900">@Model.CreatedAt.ToString("yyyy-MM-dd")</p>
+                    </div>
+                    
+                    <div class="md:col-span-2">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">العنوان</label>
+                        <p class="text-gray-900">@Model.Address</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Statistics -->
+        <div>
+            <div class="bg-white rounded-xl shadow-lg p-6">
+                <h2 class="text-xl font-bold text-gray-800 mb-4">
+                    <i class="fas fa-chart-bar text-primary-600 mr-2"></i>
+                    الإحصائيات
+                </h2>
+                
+                <div class="space-y-4">
+                    <div class="text-center p-4 bg-primary-50 rounded-lg">
+                        <div class="text-2xl font-bold text-primary-600">@Model.Assistances.Count</div>
+                        <div class="text-sm text-gray-600">إجمالي المساعدات</div>
+                    </div>
+                    
+                    <div class="text-center p-4 bg-success-50 rounded-lg">
+                        <div class="text-2xl font-bold text-success-600">@Model.Assistances.Count(a => a.Status == "مدفوع")</div>
+                        <div class="text-sm text-gray-600">المدفوع</div>
+                    </div>
+                    
+                    <div class="text-center p-4 bg-warning-50 rounded-lg">
+                        <div class="text-2xl font-bold text-warning-600">@Model.Assistances.Count(a => a.Status == "معلق")</div>
+                        <div class="text-sm text-gray-600">المعلق</div>
+                    </div>
+                    
+                    <div class="text-center p-4 bg-info-50 rounded-lg">
+                        <div class="text-2xl font-bold text-info-600">@Model.Assistances.Sum(a => a.Amount).ToString("N0")</div>
+                        <div class="text-sm text-gray-600">إجمالي المبلغ (ج.م)</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Assistances Section -->
+    <div class="bg-white rounded-xl shadow-lg p-6">
+        <div class="flex items-center justify-between mb-6">
+            <h2 class="text-xl font-bold text-gray-800">
+                <i class="fas fa-hand-holding-heart text-primary-600 mr-2"></i>
+                المساعدات المرتبطة
+            </h2>
+            <a href="@Url.Action("Create", "Assistances", new { beneficiaryId = Model.Id })" class="btn-primary">
+                <i class="fas fa-plus mr-2"></i>
+                إضافة مساعدة جديدة
+            </a>
+        </div>
+        
+        @if (Model.Assistances != null && Model.Assistances.Any())
+        {
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">نوع المساعدة</th>
+                            <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">المبلغ</th>
+                            <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">طريقة الدفع</th>
+                            <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">الحالة</th>
+                            <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">التاريخ</th>
+                            <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">الإجراءات</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                        @foreach (var assistance in Model.Assistances)
+                        {
+                            <tr class="hover:bg-gray-50">
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary-100 text-primary-800">
+                                        @assistance.Type
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                    @assistance.Amount.ToString("N0") ج.م
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                    @assistance.PaymentMethod
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    @{
+                                        var statusClass = assistance.Status switch
+                                        {
+                                            "مدفوع" => "bg-success-100 text-success-800",
+                                            "معتمد" => "bg-primary-100 text-primary-800",
+                                            "قيد المراجعة" => "bg-warning-100 text-warning-800",
+                                            "معلق" => "bg-info-100 text-info-800",
+                                            "مرفوض" => "bg-danger-100 text-danger-800",
+                                            _ => "bg-gray-100 text-gray-800"
+                                        };
+                                    }
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium @statusClass">
+                                        @assistance.Status
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                    @assistance.Date.ToString("yyyy-MM-dd")
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                    <div class="flex space-x-2 space-x-reverse">
+                                        <a href="@Url.Action("Details", "Assistances", new { id = assistance.Id })" class="text-info-600 hover:text-info-900">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                        <a href="@Url.Action("Edit", "Assistances", new { id = assistance.Id })" class="text-primary-600 hover:text-primary-900">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+        else
+        {
+            <div class="text-center py-12">
+                <i class="fas fa-hand-holding-heart text-4xl text-gray-400 mb-4"></i>
+                <p class="text-lg text-gray-500">لا توجد مساعدات مرتبطة بهذا المستفيد</p>
+            </div>
+        }
+    </div>
+</div>

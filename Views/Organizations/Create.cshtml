@@ -1,0 +1,113 @@
+@model AssistanceManagementSystem.Models.Organization
+@{
+    ViewData["Title"] = "إضافة مؤسسة جديدة";
+}
+
+<div class="min-h-screen bg-gradient-to-br from-geyser to-primary-50">
+    <!-- Header -->
+    <div class="bg-white rounded-xl shadow-lg p-6 mb-6">
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between">
+            <div>
+                <h1 class="text-3xl font-bold text-gray-800 mb-2">
+                    <i class="fas fa-building text-primary-600 mr-3"></i>
+                    إضافة مؤسسة جديدة
+                </h1>
+                <p class="text-gray-600">إضافة مؤسسة جديدة إلى النظام</p>
+            </div>
+            <div class="mt-4 sm:mt-0">
+                <a href="@Url.Action("Index", "Organizations")" class="btn-secondary">
+                    <i class="fas fa-arrow-right mr-2"></i>
+                    العودة لقائمة المؤسسات
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Create Organization Form -->
+    <div class="bg-white rounded-xl shadow-lg p-6">
+        <form asp-action="Create" method="post" class="space-y-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Basic Information -->
+                <div class="space-y-4">
+                    <h3 class="text-lg font-semibold text-gray-800 border-b border-gray-200 pb-2">
+                        <i class="fas fa-info-circle text-primary-600 mr-2"></i>
+                        المعلومات الأساسية
+                    </h3>
+                    
+                    <div>
+                        <label asp-for="Name" class="block text-sm font-medium text-gray-700 mb-2">اسم المؤسسة</label>
+                        <input asp-for="Name" class="form-input" placeholder="أدخل اسم المؤسسة">
+                        <span asp-validation-for="Name" class="text-red-500 text-sm"></span>
+                    </div>
+
+                    <div>
+                        <label asp-for="Type" class="block text-sm font-medium text-gray-700 mb-2">نوع المؤسسة</label>
+                        <select asp-for="Type" class="form-select">
+                            <option value="">اختر نوع المؤسسة</option>
+                            <option value="خيرية">خيرية</option>
+                            <option value="طبية">طبية</option>
+                            <option value="اجتماعية">اجتماعية</option>
+                            <option value="تعليمية">تعليمية</option>
+                            <option value="تنموية">تنموية</option>
+                        </select>
+                        <span asp-validation-for="Type" class="text-red-500 text-sm"></span>
+                    </div>
+
+                    <div>
+                        <label asp-for="Address" class="block text-sm font-medium text-gray-700 mb-2">العنوان</label>
+                        <textarea asp-for="Address" class="form-textarea" rows="3" placeholder="أدخل عنوان المؤسسة"></textarea>
+                        <span asp-validation-for="Address" class="text-red-500 text-sm"></span>
+                    </div>
+                </div>
+
+                <!-- Contact Information -->
+                <div class="space-y-4">
+                    <h3 class="text-lg font-semibold text-gray-800 border-b border-gray-200 pb-2">
+                        <i class="fas fa-phone text-primary-600 mr-2"></i>
+                        معلومات الاتصال
+                    </h3>
+                    
+                    <div>
+                        <label asp-for="Phone" class="block text-sm font-medium text-gray-700 mb-2">رقم الهاتف</label>
+                        <input asp-for="Phone" class="form-input" placeholder="أدخل رقم الهاتف">
+                        <span asp-validation-for="Phone" class="text-red-500 text-sm"></span>
+                    </div>
+
+                    <div>
+                        <label asp-for="Email" class="block text-sm font-medium text-gray-700 mb-2">البريد الإلكتروني</label>
+                        <input asp-for="Email" type="email" class="form-input" placeholder="أدخل البريد الإلكتروني">
+                        <span asp-validation-for="Email" class="text-red-500 text-sm"></span>
+                    </div>
+
+                    <div>
+                        <label asp-for="ContactPerson" class="block text-sm font-medium text-gray-700 mb-2">الشخص المسؤول</label>
+                        <input asp-for="ContactPerson" class="form-input" placeholder="أدخل اسم الشخص المسؤول">
+                        <span asp-validation-for="ContactPerson" class="text-red-500 text-sm"></span>
+                    </div>
+
+                    <div>
+                        <label asp-for="AccountNumber" class="block text-sm font-medium text-gray-700 mb-2">رقم الحساب البنكي</label>
+                        <input asp-for="AccountNumber" class="form-input" placeholder="أدخل رقم الحساب البنكي">
+                        <span asp-validation-for="AccountNumber" class="text-red-500 text-sm"></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Form Actions -->
+            <div class="flex justify-end space-x-4 space-x-reverse pt-6 border-t border-gray-200">
+                <a href="@Url.Action("Index", "Organizations")" class="btn-secondary">
+                    <i class="fas fa-times mr-2"></i>
+                    إلغاء
+                </a>
+                <button type="submit" class="btn-primary">
+                    <i class="fas fa-save mr-2"></i>
+                    حفظ المؤسسة
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

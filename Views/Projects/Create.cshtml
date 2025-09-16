@@ -1,0 +1,138 @@
+@model AssistanceManagementSystem.Models.Project
+@{
+    ViewData["Title"] = "إضافة مشروع جديد";
+}
+
+<div class="min-h-screen bg-gradient-to-br from-geyser to-primary-50">
+    <!-- Header -->
+    <div class="bg-white rounded-xl shadow-lg p-6 mb-6">
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between">
+            <div>
+                <h1 class="text-3xl font-bold text-gray-800 mb-2">
+                    <i class="fas fa-project-diagram text-primary-600 mr-3"></i>
+                    إضافة مشروع جديد
+                </h1>
+                <p class="text-gray-600">إضافة مشروع جديد إلى النظام</p>
+            </div>
+            <div class="mt-4 sm:mt-0">
+                <a href="@Url.Action("Index", "Projects")" class="btn-secondary">
+                    <i class="fas fa-arrow-right mr-2"></i>
+                    العودة لقائمة المشاريع
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Create Project Form -->
+    <div class="bg-white rounded-xl shadow-lg p-6">
+        <form asp-action="Create" method="post" class="space-y-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Basic Information -->
+                <div class="space-y-4">
+                    <h3 class="text-lg font-semibold text-gray-800 border-b border-gray-200 pb-2">
+                        <i class="fas fa-info-circle text-primary-600 mr-2"></i>
+                        المعلومات الأساسية
+                    </h3>
+                    
+                    <div>
+                        <label asp-for="Name" class="block text-sm font-medium text-gray-700 mb-2">اسم المشروع</label>
+                        <input asp-for="Name" class="form-input" placeholder="أدخل اسم المشروع">
+                        <span asp-validation-for="Name" class="text-red-500 text-sm"></span>
+                    </div>
+
+                    <div>
+                        <label asp-for="Type" class="block text-sm font-medium text-gray-700 mb-2">نوع المشروع</label>
+                        <select asp-for="Type" class="form-select">
+                            <option value="">اختر نوع المشروع</option>
+                            <option value="اجتماعي">اجتماعي</option>
+                            <option value="طبي">طبي</option>
+                            <option value="تعليمي">تعليمي</option>
+                            <option value="تنموي">تنموي</option>
+                        </select>
+                        <span asp-validation-for="Type" class="text-red-500 text-sm"></span>
+                    </div>
+
+                    <div>
+                        <label asp-for="OrganizationId" class="block text-sm font-medium text-gray-700 mb-2">المؤسسة</label>
+                        <select asp-for="OrganizationId" class="form-select" asp-items="ViewBag.Organizations">
+                            <option value="">اختر المؤسسة</option>
+                        </select>
+                        <span asp-validation-for="OrganizationId" class="text-red-500 text-sm"></span>
+                    </div>
+
+                    <div>
+                        <label asp-for="Description" class="block text-sm font-medium text-gray-700 mb-2">وصف المشروع</label>
+                        <textarea asp-for="Description" class="form-textarea" rows="3" placeholder="أدخل وصف المشروع"></textarea>
+                        <span asp-validation-for="Description" class="text-red-500 text-sm"></span>
+                    </div>
+                </div>
+
+                <!-- Project Details -->
+                <div class="space-y-4">
+                    <h3 class="text-lg font-semibold text-gray-800 border-b border-gray-200 pb-2">
+                        <i class="fas fa-calendar text-primary-600 mr-2"></i>
+                        تفاصيل المشروع
+                    </h3>
+                    
+                    <div>
+                        <label asp-for="StartDate" class="block text-sm font-medium text-gray-700 mb-2">تاريخ البداية</label>
+                        <input asp-for="StartDate" type="date" class="form-input">
+                        <span asp-validation-for="StartDate" class="text-red-500 text-sm"></span>
+                    </div>
+
+                    <div>
+                        <label asp-for="EndDate" class="block text-sm font-medium text-gray-700 mb-2">تاريخ النهاية</label>
+                        <input asp-for="EndDate" type="date" class="form-input">
+                        <span asp-validation-for="EndDate" class="text-red-500 text-sm"></span>
+                    </div>
+
+                    <div>
+                        <label asp-for="Budget" class="block text-sm font-medium text-gray-700 mb-2">الميزانية</label>
+                        <input asp-for="Budget" type="number" step="0.01" class="form-input" placeholder="أدخل الميزانية">
+                        <span asp-validation-for="Budget" class="text-red-500 text-sm"></span>
+                    </div>
+
+                    <div>
+                        <label asp-for="Status" class="block text-sm font-medium text-gray-700 mb-2">حالة المشروع</label>
+                        <select asp-for="Status" class="form-select">
+                            <option value="">اختر حالة المشروع</option>
+                            <option value="نشط">نشط</option>
+                            <option value="قيد التنفيذ">قيد التنفيذ</option>
+                            <option value="مكتمل">مكتمل</option>
+                            <option value="معلق">معلق</option>
+                        </select>
+                        <span asp-validation-for="Status" class="text-red-500 text-sm"></span>
+                    </div>
+
+                    <div>
+                        <label asp-for="Address" class="block text-sm font-medium text-gray-700 mb-2">عنوان المشروع</label>
+                        <input asp-for="Address" class="form-input" placeholder="أدخل عنوان المشروع">
+                        <span asp-validation-for="Address" class="text-red-500 text-sm"></span>
+                    </div>
+
+                    <div>
+                        <label asp-for="Phone" class="block text-sm font-medium text-gray-700 mb-2">رقم الهاتف</label>
+                        <input asp-for="Phone" class="form-input" placeholder="أدخل رقم الهاتف">
+                        <span asp-validation-for="Phone" class="text-red-500 text-sm"></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Form Actions -->
+            <div class="flex justify-end space-x-4 space-x-reverse pt-6 border-t border-gray-200">
+                <a href="@Url.Action("Index", "Projects")" class="btn-secondary">
+                    <i class="fas fa-times mr-2"></i>
+                    إلغاء
+                </a>
+                <button type="submit" class="btn-primary">
+                    <i class="fas fa-save mr-2"></i>
+                    حفظ المشروع
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

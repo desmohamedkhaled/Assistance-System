@@ -1,0 +1,228 @@
+@model AssistanceManagementSystem.Models.Beneficiary
+@{
+    ViewData["Title"] = "إضافة مستفيد جديد";
+}
+
+<div class="page-header">
+    <div class="d-flex justify-content-between align-items-center">
+        <div>
+            <h1 class="page-title">إضافة مستفيد جديد</h1>
+            <p class="page-subtitle">إدخال بيانات مستفيد جديد في النظام</p>
+        </div>
+        <div>
+            <a href="@Url.Action("Index")" class="btn btn-outline-secondary">
+                <i class="fas fa-arrow-right"></i> العودة للقائمة
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="content-section">
+    <div class="section-header">
+        <h2 class="section-title">بيانات المستفيد</h2>
+    </div>
+    
+    <form asp-action="Create" method="post" class="needs-validation" novalidate>
+        <div class="p-4">
+            <div class="row">
+                <!-- Personal Information -->
+                <div class="col-md-6">
+                    <h5 class="mb-3 text-primary">
+                        <i class="fas fa-user me-2"></i>المعلومات الشخصية
+                    </h5>
+                    
+                    <div class="form-group mb-3">
+                        <label asp-for="FirstName" class="form-label">الاسم الأول *</label>
+                        <input asp-for="FirstName" class="form-control" required />
+                        <span asp-validation-for="FirstName" class="text-danger"></span>
+                    </div>
+                    
+                    <div class="form-group mb-3">
+                        <label asp-for="SecondName" class="form-label">الاسم الثاني *</label>
+                        <input asp-for="SecondName" class="form-control" required />
+                        <span asp-validation-for="SecondName" class="text-danger"></span>
+                    </div>
+                    
+                    <div class="form-group mb-3">
+                        <label asp-for="ThirdName" class="form-label">الاسم الثالث *</label>
+                        <input asp-for="ThirdName" class="form-control" required />
+                        <span asp-validation-for="ThirdName" class="text-danger"></span>
+                    </div>
+                    
+                    <div class="form-group mb-3">
+                        <label asp-for="LastName" class="form-label">الاسم الأخير *</label>
+                        <input asp-for="LastName" class="form-control" required />
+                        <span asp-validation-for="LastName" class="text-danger"></span>
+                    </div>
+                    
+                    <div class="form-group mb-3">
+                        <label asp-for="NationalId" class="form-label">الرقم القومي *</label>
+                        <input asp-for="NationalId" class="form-control" maxlength="14" pattern="[0-9]{14}" required />
+                        <div class="form-text">يجب أن يكون 14 رقم</div>
+                        <span asp-validation-for="NationalId" class="text-danger"></span>
+                    </div>
+                    
+                    <div class="form-group mb-3">
+                        <label asp-for="Phone" class="form-label">رقم الهاتف *</label>
+                        <input asp-for="Phone" class="form-control" type="tel" required />
+                        <span asp-validation-for="Phone" class="text-danger"></span>
+                    </div>
+                </div>
+                
+                <!-- Additional Information -->
+                <div class="col-md-6">
+                    <h5 class="mb-3 text-primary">
+                        <i class="fas fa-info-circle me-2"></i>معلومات إضافية
+                    </h5>
+                    
+                    <div class="form-group mb-3">
+                        <label asp-for="Address" class="form-label">العنوان *</label>
+                        <textarea asp-for="Address" class="form-control" rows="3" required></textarea>
+                        <span asp-validation-for="Address" class="text-danger"></span>
+                    </div>
+                    
+                    <div class="form-group mb-3">
+                        <label asp-for="Gender" class="form-label">النوع *</label>
+                        <select asp-for="Gender" class="form-select" required>
+                            <option value="">اختر النوع</option>
+                            <option value="ذكر">ذكر</option>
+                            <option value="أنثى">أنثى</option>
+                        </select>
+                        <span asp-validation-for="Gender" class="text-danger"></span>
+                    </div>
+                    
+                    <div class="form-group mb-3">
+                        <label asp-for="Religion" class="form-label">الديانة *</label>
+                        <select asp-for="Religion" class="form-select" required>
+                            <option value="">اختر الديانة</option>
+                            <option value="مسلم">مسلم</option>
+                            <option value="مسلمة">مسلمة</option>
+                            <option value="مسيحي">مسيحي</option>
+                            <option value="مسيحية">مسيحية</option>
+                            <option value="أخرى">أخرى</option>
+                        </select>
+                        <span asp-validation-for="Religion" class="text-danger"></span>
+                    </div>
+                    
+                    <div class="form-group mb-3">
+                        <label asp-for="MaritalStatus" class="form-label">الحالة الاجتماعية *</label>
+                        <select asp-for="MaritalStatus" class="form-select" required>
+                            <option value="">اختر الحالة الاجتماعية</option>
+                            <option value="عازب">عازب</option>
+                            <option value="عزباء">عزباء</option>
+                            <option value="متزوج">متزوج</option>
+                            <option value="متزوجة">متزوجة</option>
+                            <option value="مطلق">مطلق</option>
+                            <option value="مطلقة">مطلقة</option>
+                            <option value="أرمل">أرمل</option>
+                            <option value="أرملة">أرملة</option>
+                        </select>
+                        <span asp-validation-for="MaritalStatus" class="text-danger"></span>
+                    </div>
+                    
+                    <div class="form-group mb-3">
+                        <label asp-for="FamilyMembers" class="form-label">عدد أفراد الأسرة *</label>
+                        <input asp-for="FamilyMembers" class="form-control" type="number" min="1" max="20" required />
+                        <span asp-validation-for="FamilyMembers" class="text-danger"></span>
+                    </div>
+                    
+                    <div class="form-group mb-3">
+                        <label asp-for="Income" class="form-label">الدخل الشهري (جنيه) *</label>
+                        <input asp-for="Income" class="form-control" type="number" min="0" step="0.01" required />
+                        <span asp-validation-for="Income" class="text-danger"></span>
+                    </div>
+                    
+                    <div class="form-group mb-3">
+                        <label asp-for="BranchId" class="form-label">الفرع *</label>
+                        <select asp-for="BranchId" class="form-select" required>
+                            <option value="">اختر الفرع</option>
+                            @foreach (var branch in ViewBag.Branches)
+                            {
+                                <option value="@branch.Id">@branch.Name</option>
+                            }
+                        </select>
+                        <span asp-validation-for="BranchId" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Form Actions -->
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-save"></i> حفظ المستفيد
+                </button>
+                <a href="@Url.Action("Index")" class="btn btn-secondary">
+                    <i class="fas fa-times"></i> إلغاء
+                </a>
+            </div>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <script>
+        // Auto-generate full name
+        document.addEventListener('DOMContentLoaded', function() {
+            const firstName = document.getElementById('FirstName');
+            const secondName = document.getElementById('SecondName');
+            const thirdName = document.getElementById('ThirdName');
+            const lastName = document.getElementById('LastName');
+            
+            function updateFullName() {
+                const fullName = `${firstName.value} ${secondName.value} ${thirdName.value} ${lastName.value}`.trim();
+                // You can add a hidden field for FullName if needed
+            }
+            
+            [firstName, secondName, thirdName, lastName].forEach(input => {
+                input.addEventListener('input', updateFullName);
+            });
+        });
+
+        // National ID validation
+        document.getElementById('NationalId').addEventListener('input', function() {
+            const value = this.value;
+            if (value.length === 14) {
+                // Basic validation for Egyptian National ID
+                const year = parseInt(value.substring(1, 3));
+                const month = parseInt(value.substring(3, 5));
+                const day = parseInt(value.substring(5, 7));
+                
+                if (month < 1 || month > 12 || day < 1 || day > 31) {
+                    this.setCustomValidity('الرقم القومي غير صحيح');
+                } else {
+                    this.setCustomValidity('');
+                }
+            } else {
+                this.setCustomValidity('يجب أن يكون الرقم القومي 14 رقم');
+            }
+        });
+
+        // Phone number formatting
+        document.getElementById('Phone').addEventListener('input', function() {
+            let value = this.value.replace(/\D/g, '');
+            if (value.startsWith('0')) {
+                value = '+20' + value.substring(1);
+            } else if (!value.startsWith('+20')) {
+                value = '+20' + value;
+            }
+            this.value = value;
+        });
+
+        // Form validation
+        (function() {
+            'use strict';
+            window.addEventListener('load', function() {
+                var forms = document.getElementsByClassName('needs-validation');
+                var validation = Array.prototype.filter.call(forms, function(form) {
+                    form.addEventListener('submit', function(event) {
+                        if (form.checkValidity() === false) {
+                            event.preventDefault();
+                            event.stopPropagation();
+                        }
+                        form.classList.add('was-validated');
+                    }, false);
+                });
+            }, false);
+        })();
+    </script>
+}

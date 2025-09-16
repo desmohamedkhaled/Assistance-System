@@ -1,0 +1,298 @@
+@model IEnumerable<AssistanceManagementSystem.Models.Beneficiary>
+@{
+    ViewData["Title"] = "المستفيدين";
+}
+
+<div class="page-header">
+    <div class="d-flex justify-content-between align-items-center">
+        <div>
+            <h1 class="page-title">المستفيدين</h1>
+            <p class="page-subtitle">إدارة بيانات المستفيدين من المساعدات</p>
+        </div>
+        <div>
+            <a href="@Url.Action("Create")" class="btn btn-primary">
+                <i class="fas fa-plus"></i> إضافة مستفيد جديد
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Filters and Search -->
+<div class="content-section mb-4">
+    <div class="section-header">
+        <h2 class="section-title">البحث والتصفية</h2>
+    </div>
+    <div class="p-4">
+        <form method="get" class="row g-3">
+            <div class="col-md-4">
+                <label class="form-label">البحث</label>
+                <div class="search-container">
+                    <input type="text" name="search" value="@ViewBag.Search" class="search-input" placeholder="البحث بالاسم أو الرقم القومي أو الهاتف">
+                    <i class="fas fa-search search-icon"></i>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">النوع</label>
+                <select name="gender" class="form-select">
+                    <option value="">جميع الأنواع</option>
+                    <option value="ذكر" selected="@(ViewBag.Gender == "ذكر")">ذكر</option>
+                    <option value="أنثى" selected="@(ViewBag.Gender == "أنثى")">أنثى</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">الفرع</label>
+                <select name="branchId" class="form-select">
+                    <option value="">جميع الفروع</option>
+                    @foreach (var branch in ViewBag.Branches)
+                    {
+                        <option value="@branch.Id" selected="@(ViewBag.BranchId == branch.Id)">@branch.Name</option>
+                    }
+                </select>
+            </div>
+            <div class="col-md-2">
+                <label class="form-label">&nbsp;</label>
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-search"></i> بحث
+                    </button>
+                    <a href="@Url.Action("Index")" class="btn btn-outline-secondary">
+                        <i class="fas fa-times"></i> مسح
+                    </a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Statistics Cards -->
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="stat-card">
+            <div class="stat-content">
+                <h3>إجمالي المستفيدين</h3>
+                <span class="stat-number">@ViewBag.TotalCount</span>
+                <span class="stat-label">مستفيد</span>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="stat-card">
+            <div class="stat-content">
+                <h3>الذكور</h3>
+                <span class="stat-number">@Model.Count(b => b.Gender == "ذكر")</span>
+                <span class="stat-label">مستفيد</span>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="stat-card">
+            <div class="stat-content">
+                <h3>الإناث</h3>
+                <span class="stat-number">@Model.Count(b => b.Gender == "أنثى")</span>
+                <span class="stat-label">مستفيدة</span>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="stat-card">
+            <div class="stat-content">
+                <h3>متوسط الدخل</h3>
+                <span class="stat-number">@(Model.Any() ? Model.Average(b => b.Income).ToString("N0") : "0")</span>
+                <span class="stat-label">جنيه</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Beneficiaries Table -->
+<div class="content-section">
+    <div class="section-header">
+        <h2 class="section-title">قائمة المستفيدين</h2>
+        <div class="d-flex gap-2">
+            <button class="btn btn-outline-primary btn-sm" onclick="exportToExcel()">
+                <i class="fas fa-file-excel"></i> تصدير Excel
+            </button>
+            <button class="btn btn-outline-danger btn-sm" onclick="exportToPDF()">
+                <i class="fas fa-file-pdf"></i> تصدير PDF
+            </button>
+        </div>
+    </div>
+    
+    <div class="table-container">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>الاسم الكامل</th>
+                    <th>الرقم القومي</th>
+                    <th>الهاتف</th>
+                    <th>النوع</th>
+                    <th>الفرع</th>
+                    <th>عدد أفراد الأسرة</th>
+                    <th>الدخل الشهري</th>
+                    <th>تاريخ التسجيل</th>
+                    <th>الإجراءات</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var beneficiary in Model)
+                {
+                    <tr>
+                        <td>@beneficiary.Id</td>
+                        <td>
+                            <div class="d-flex align-items-center">
+                                <div class="avatar me-2">
+                                    <i class="fas fa-user"></i>
+                                </div>
+                                <div>
+                                    <div class="fw-bold">@beneficiary.FullName</div>
+                                    <small class="text-muted">@beneficiary.Address</small>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="badge bg-light text-dark">@beneficiary.NationalId</span>
+                        </td>
+                        <td>
+                            <a href="tel:@beneficiary.Phone" class="text-decoration-none">
+                                <i class="fas fa-phone me-1"></i>@beneficiary.Phone
+                            </a>
+                        </td>
+                        <td>
+                            <span class="badge @(beneficiary.Gender == "ذكر" ? "bg-primary" : "bg-pink")">
+                                @beneficiary.Gender
+                            </span>
+                        </td>
+                        <td>
+                            @if (beneficiary.Branch != null)
+                            {
+                                <span class="badge bg-secondary">@beneficiary.Branch.Name</span>
+                            }
+                            else
+                            {
+                                <span class="text-muted">غير محدد</span>
+                            }
+                        </td>
+                        <td>
+                            <span class="badge bg-info">@beneficiary.FamilyMembers</span>
+                        </td>
+                        <td>
+                            <span class="fw-bold text-success">@beneficiary.Income.ToString("N0") ج.م</span>
+                        </td>
+                        <td>
+                            <small class="text-muted">@beneficiary.CreatedAt.ToString("yyyy-MM-dd")</small>
+                        </td>
+                        <td>
+                            <div class="btn-group" role="group">
+                                <a href="@Url.Action("Details", new { id = beneficiary.Id })" 
+                                   class="btn btn-outline-info btn-sm" 
+                                   data-bs-toggle="tooltip" 
+                                   title="عرض التفاصيل">
+                                    <i class="fas fa-eye"></i>
+                                </a>
+                                <a href="@Url.Action("Edit", new { id = beneficiary.Id })" 
+                                   class="btn btn-outline-warning btn-sm" 
+                                   data-bs-toggle="tooltip" 
+                                   title="تعديل">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <button type="button" 
+                                        class="btn btn-outline-danger btn-sm" 
+                                        data-bs-toggle="modal" 
+                                        data-bs-target="#deleteModal" 
+                                        data-beneficiary-id="@beneficiary.Id"
+                                        data-beneficiary-name="@beneficiary.FullName"
+                                        data-bs-toggle="tooltip" 
+                                        title="حذف">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    
+    <!-- Pagination -->
+    @if (ViewBag.TotalPages > 1)
+    {
+        <div class="d-flex justify-content-center mt-4">
+            <nav aria-label="Page navigation">
+                <ul class="pagination">
+                    @if (ViewBag.Page > 1)
+                    {
+                        <li class="page-item">
+                            <a class="page-link" href="@Url.Action("Index", new { page = ViewBag.Page - 1, search = ViewBag.Search, gender = ViewBag.Gender, branchId = ViewBag.BranchId })">السابق</a>
+                        </li>
+                    }
+                    
+                    @for (int i = Math.Max(1, ViewBag.Page - 2); i <= Math.Min(ViewBag.TotalPages, ViewBag.Page + 2); i++)
+                    {
+                        <li class="page-item @(i == ViewBag.Page ? "active" : "")">
+                            <a class="page-link" href="@Url.Action("Index", new { page = i, search = ViewBag.Search, gender = ViewBag.Gender, branchId = ViewBag.BranchId })">@i</a>
+                        </li>
+                    }
+                    
+                    @if (ViewBag.Page < ViewBag.TotalPages)
+                    {
+                        <li class="page-item">
+                            <a class="page-link" href="@Url.Action("Index", new { page = ViewBag.Page + 1, search = ViewBag.Search, gender = ViewBag.Gender, branchId = ViewBag.BranchId })">التالي</a>
+                        </li>
+                    }
+                </ul>
+            </nav>
+        </div>
+    }
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">تأكيد الحذف</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>هل أنت متأكد من حذف المستفيد <strong id="beneficiaryName"></strong>؟</p>
+                <p class="text-danger"><small>تحذير: لا يمكن التراجع عن هذا الإجراء.</small></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
+                <form id="deleteForm" method="post" style="display: inline;">
+                    <button type="submit" class="btn btn-danger">حذف</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Delete modal functionality
+        document.getElementById('deleteModal').addEventListener('show.bs.modal', function (event) {
+            var button = event.relatedTarget;
+            var beneficiaryId = button.getAttribute('data-beneficiary-id');
+            var beneficiaryName = button.getAttribute('data-beneficiary-name');
+            
+            var modal = this;
+            modal.querySelector('#beneficiaryName').textContent = beneficiaryName;
+            modal.querySelector('#deleteForm').action = '@Url.Action("Delete")/' + beneficiaryId;
+        });
+
+        // Export functions
+        function exportToExcel() {
+            window.location.href = '@Url.Action("ExportExcel")';
+        }
+
+        function exportToPDF() {
+            window.location.href = '@Url.Action("ExportPDF")';
+        }
+
+        // Auto-refresh statistics
+        setInterval(function() {
+            // You can add AJAX call here to refresh statistics
+        }, 30000);
+    </script>
+}

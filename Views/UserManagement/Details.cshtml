@@ -1,0 +1,326 @@
+@model AssistanceManagementSystem.Controllers.UserWithRoles
+@{
+    ViewData["Title"] = "تفاصيل المستخدم";
+}
+
+<div class="page-header">
+    <div class="d-flex justify-content-between align-items-center">
+        <div>
+            <h1 class="page-title">تفاصيل المستخدم</h1>
+            <p class="page-subtitle">عرض تفاصيل المستخدم: @Model.User.FullName</p>
+        </div>
+        <div>
+            <a href="@Url.Action("Edit", new { id = Model.User.Id })" class="btn btn-warning">
+                <i class="fas fa-edit"></i> تعديل
+            </a>
+            <a href="@Url.Action("Index")" class="btn btn-outline-secondary">
+                <i class="fas fa-arrow-right"></i> العودة للقائمة
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <!-- User Information -->
+        <div class="content-section mb-4">
+            <div class="section-header">
+                <h2 class="section-title">البيانات الشخصية</h2>
+            </div>
+            
+            <div class="p-4">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="info-item">
+                            <label class="info-label">اسم المستخدم</label>
+                            <div class="info-value">@Model.User.UserName</div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="info-item">
+                            <label class="info-label">الاسم الكامل</label>
+                            <div class="info-value">@Model.User.FullName</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="info-item">
+                            <label class="info-label">البريد الإلكتروني</label>
+                            <div class="info-value">
+                                <a href="mailto:@Model.User.Email" class="text-decoration-none">
+                                    <i class="fas fa-envelope me-1"></i>@Model.User.Email
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="info-item">
+                            <label class="info-label">رقم الهاتف</label>
+                            <div class="info-value">
+                                @if (!string.IsNullOrEmpty(Model.User.PhoneNumber))
+                                {
+                                    <a href="tel:@Model.User.PhoneNumber" class="text-decoration-none">
+                                        <i class="fas fa-phone me-1"></i>@Model.User.PhoneNumber
+                                    </a>
+                                }
+                                else
+                                {
+                                    <span class="text-muted">غير محدد</span>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="info-item">
+                            <label class="info-label">الفرع</label>
+                            <div class="info-value">
+                                @if (Model.User.Branch != null)
+                                {
+                                    <span class="badge bg-secondary">@Model.User.Branch.Name</span>
+                                }
+                                else
+                                {
+                                    <span class="text-muted">غير محدد</span>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="info-item">
+                            <label class="info-label">الحالة</label>
+                            <div class="info-value">
+                                @if (Model.User.IsActive)
+                                {
+                                    <span class="badge bg-success">نشط</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-danger">معطل</span>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Roles Information -->
+        <div class="content-section mb-4">
+            <div class="section-header">
+                <h2 class="section-title">الأدوار والصلاحيات</h2>
+            </div>
+            
+            <div class="p-4">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="info-item">
+                            <label class="info-label">الأدوار المخصصة</label>
+                            <div class="info-value">
+                                @if (Model.Roles.Any())
+                                {
+                                    @foreach (var role in Model.Roles)
+                                    {
+                                        <span class="badge bg-primary me-2 mb-2">@role</span>
+                                    }
+                                }
+                                else
+                                {
+                                    <span class="text-muted">لا توجد أدوار مخصصة</span>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <!-- User Statistics -->
+        <div class="content-section mb-4">
+            <div class="section-header">
+                <h2 class="section-title">إحصائيات المستخدم</h2>
+            </div>
+            
+            <div class="p-4">
+                <div class="stat-item">
+                    <div class="stat-icon">
+                        <i class="fas fa-calendar-alt"></i>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-label">تاريخ الإنشاء</div>
+                        <div class="stat-value">@Model.User.CreatedAt.ToString("yyyy-MM-dd")</div>
+                    </div>
+                </div>
+                
+                <div class="stat-item">
+                    <div class="stat-icon">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-label">آخر تسجيل دخول</div>
+                        <div class="stat-value">
+                            @if (Model.User.LastLogin.HasValue)
+                            {
+                                @Model.User.LastLogin.Value.ToString("yyyy-MM-dd HH:mm")
+                            }
+                            else
+                            {
+                                <span class="text-muted">لم يسجل دخول بعد</span>
+                            }
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="stat-item">
+                    <div class="stat-icon">
+                        <i class="fas fa-user-check"></i>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-label">حالة البريد الإلكتروني</div>
+                        <div class="stat-value">
+                            @if (Model.User.EmailConfirmed)
+                            {
+                                <span class="badge bg-success">مؤكد</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-warning">غير مؤكد</span>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Quick Actions -->
+        <div class="content-section">
+            <div class="section-header">
+                <h2 class="section-title">الإجراءات السريعة</h2>
+            </div>
+            
+            <div class="p-4">
+                <div class="d-grid gap-2">
+                    <a href="@Url.Action("Edit", new { id = Model.User.Id })" class="btn btn-warning">
+                        <i class="fas fa-edit"></i> تعديل البيانات
+                    </a>
+                    
+                    @if (!Model.Roles.Contains("Admin"))
+                    {
+                        <button type="button" class="btn btn-@(Model.User.IsActive ? "warning" : "success")" onclick="toggleUserStatus('@Model.User.Id', @Model.User.IsActive.ToString().ToLower())">
+                            <i class="fas fa-@(Model.User.IsActive ? "ban" : "check")"></i> @(Model.User.IsActive ? "تعطيل" : "تفعيل") المستخدم
+                        </button>
+                    }
+                    
+                    <button type="button" class="btn btn-info" onclick="resetPassword('@Model.User.Id')">
+                        <i class="fas fa-key"></i> إعادة تعيين كلمة المرور
+                    </button>
+                    
+                    @if (!Model.Roles.Contains("Admin"))
+                    {
+                        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal">
+                            <i class="fas fa-trash"></i> حذف المستخدم
+                        </button>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">تأكيد الحذف</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>هل أنت متأكد من حذف المستخدم <strong>@Model.User.FullName</strong>؟</p>
+                <p class="text-danger"><small>تحذير: لا يمكن التراجع عن هذا الإجراء.</small></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
+                <form asp-action="Delete" method="post" style="display: inline;">
+                    <input name="id" value="@Model.User.Id" type="hidden" />
+                    <button type="submit" class="btn btn-danger">حذف</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Reset Password Modal -->
+<div class="modal fade" id="resetPasswordModal" tabindex="-1" aria-labelledby="resetPasswordModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="resetPasswordModalLabel">إعادة تعيين كلمة المرور</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form id="resetPasswordForm" method="post">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="newPassword" class="form-label">كلمة المرور الجديدة</label>
+                        <input type="password" class="form-control" id="newPassword" name="newPassword" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="confirmPassword" class="form-label">تأكيد كلمة المرور</label>
+                        <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
+                    <button type="submit" class="btn btn-primary">إعادة تعيين</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Toggle user status
+        function toggleUserStatus(userId, isActive) {
+            if (confirm('هل أنت متأكد من ' + (isActive ? 'تعطيل' : 'تفعيل') + ' هذا المستخدم؟')) {
+                var form = document.createElement('form');
+                form.method = 'POST';
+                form.action = '@Url.Action("ToggleActive")/' + userId;
+                
+                var token = document.createElement('input');
+                token.type = 'hidden';
+                token.name = '__RequestVerificationToken';
+                token.value = '@Html.AntiForgeryToken()';
+                
+                form.appendChild(token);
+                document.body.appendChild(form);
+                form.submit();
+            }
+        }
+
+        // Reset password modal
+        function resetPassword(userId) {
+            var modal = new bootstrap.Modal(document.getElementById('resetPasswordModal'));
+            document.getElementById('resetPasswordForm').action = '@Url.Action("ResetPassword")/' + userId;
+            modal.show();
+        }
+
+        // Password confirmation validation
+        document.getElementById('confirmPassword').addEventListener('input', function() {
+            var password = document.getElementById('newPassword').value;
+            var confirmPassword = this.value;
+            
+            if (password !== confirmPassword) {
+                this.setCustomValidity('كلمة المرور غير متطابقة');
+            } else {
+                this.setCustomValidity('');
+            }
+        });
+    </script>
+}

@@ -1,0 +1,146 @@
+@model AssistanceManagementSystem.Controllers.ProfileViewModel
+@{
+    ViewData["Title"] = "الملف الشخصي";
+}
+
+<div class="page-header">
+    <div class="d-flex justify-content-between align-items-center">
+        <div>
+            <h1 class="page-title">الملف الشخصي</h1>
+            <p class="page-subtitle">إدارة بياناتك الشخصية</p>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="content-section">
+            <div class="section-header">
+                <h2 class="section-title">البيانات الشخصية</h2>
+            </div>
+            
+            <div class="p-4">
+                <form asp-action="Profile" method="post" class="needs-validation" novalidate>
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label asp-for="Username" class="form-label">اسم المستخدم</label>
+                                <input asp-for="Username" class="form-control" readonly />
+                                <small class="form-text text-muted">لا يمكن تغيير اسم المستخدم</small>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label asp-for="Email" class="form-label">البريد الإلكتروني</label>
+                                <input asp-for="Email" type="email" class="form-control" placeholder="أدخل البريد الإلكتروني" required />
+                                <span asp-validation-for="Email" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label asp-for="FullName" class="form-label">الاسم الكامل</label>
+                                <input asp-for="FullName" class="form-control" placeholder="أدخل الاسم الكامل" required />
+                                <span asp-validation-for="FullName" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label asp-for="Phone" class="form-label">رقم الهاتف</label>
+                                <input asp-for="Phone" class="form-control" placeholder="أدخل رقم الهاتف" />
+                                <span asp-validation-for="Phone" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save"></i> حفظ التغييرات
+                        </button>
+                        <a href="@Url.Action("ChangePassword")" class="btn btn-warning">
+                            <i class="fas fa-key"></i> تغيير كلمة المرور
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="content-section">
+            <div class="section-header">
+                <h2 class="section-title">معلومات الحساب</h2>
+            </div>
+            
+            <div class="p-4">
+                <div class="info-item">
+                    <label class="info-label">اسم المستخدم</label>
+                    <div class="info-value">@Model.Username</div>
+                </div>
+                
+                <div class="info-item">
+                    <label class="info-label">البريد الإلكتروني</label>
+                    <div class="info-value">@Model.Email</div>
+                </div>
+                
+                <div class="info-item">
+                    <label class="info-label">الاسم الكامل</label>
+                    <div class="info-value">@Model.FullName</div>
+                </div>
+                
+                <div class="info-item">
+                    <label class="info-label">رقم الهاتف</label>
+                    <div class="info-value">
+                        @if (!string.IsNullOrEmpty(Model.Phone))
+                        {
+                            @Model.Phone
+                        }
+                        else
+                        {
+                            <span class="text-muted">غير محدد</span>
+                        }
+                    </div>
+                </div>
+                
+                <div class="info-item">
+                    <label class="info-label">الفرع</label>
+                    <div class="info-value">
+                        @if (Model.BranchId.HasValue)
+                        {
+                            <span class="badge bg-secondary">الفرع @Model.BranchId</span>
+                        }
+                        else
+                        {
+                            <span class="text-muted">غير محدد</span>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Form validation
+        (function() {
+            'use strict';
+            window.addEventListener('load', function() {
+                var forms = document.getElementsByClassName('needs-validation');
+                var validation = Array.prototype.filter.call(forms, function(form) {
+                    form.addEventListener('submit', function(event) {
+                        if (form.checkValidity() === false) {
+                            event.preventDefault();
+                            event.stopPropagation();
+                        }
+                        form.classList.add('was-validated');
+                    }, false);
+                });
+            }, false);
+        })();
+    </script>
+}
